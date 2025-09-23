@@ -1,4 +1,5 @@
 import poolDB from "@/lib/db";
+import {z} from "zod"
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
     try {
@@ -16,8 +17,8 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const conn = await poolDB.getConnection()
-    try {
-        const {id} = await params
+    try {        
+        const {id} = await params;
 
         const url = new URL(req.url);
         const user = url.searchParams.get("user");
@@ -44,6 +45,53 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     } catch (err: any) {
         conn.rollback()
         return Response.json({ success: false, error: err.message }, { status: 500 })
+    } finally {
+        conn.release()
+    }
+}
+
+// UPDATE KELAS
+const KelasReqSchema = z.object({
+    nama_kelas: z.string().min(1, "Nama kelas tidak boleh kosong"),
+    user: z.string().min(1, "User tidak boleh kosong")
+})
+
+type KelasReq = z.infer<typeof KelasReqSchema>
+
+export async function PATCH(req: Request, {params} : {params: Promise<{id: string}>}) {
+    const conn = await poolDB.getConnection()
+
+    try {
+        const payload = await req.json();
+        const kelas: KelasReq = KelasReqSchema.parse(payload)
+
+        const newKelasID = kelas.nama_kelas.replace(/\s+/g, "").toUpperCase()
+
+        const {id} = await params;
+
+        await conn.beginTransaction()
+
+        let updateKelasRes;
+        try {
+            const [res] = await conn.execute("UPDATE kelas SET kelas_id = ?, nama_kelas = ? WHERE kelas_id = ?", [newKelasID, kelas.nama_kelas, id]);
+            updateKelasRes = res;
+        } catch (err) {
+            throw new Error(`Gagal update kelas, ${err}`)
+        }
+
+        let logRes;
+        try {
+            const [res] = await conn.execute("INSERT INTO log (user, keterangan) VALUES (?, ?)", [kelas.user, `Menghapus kelas ${id}`]);
+            logRes = res;
+        } catch (err) {
+            throw new Error(`Logging gagal, ${err}`)
+        }
+
+        return Response.json({success: true, updateKelasRes, logRes})
+    } catch (err: any) {
+        conn.rollback()
+
+        return Response.json({success: false, error: err.message}, {status: 500})
     } finally {
         conn.release()
     }
