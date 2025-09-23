@@ -1,9 +1,13 @@
 import poolDB from "@/lib/db";
 import {z} from "zod"
+import { logger } from "@/lib/logger";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+// GET KELAS BY ID
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const [rows] = await poolDB.query("SELECT nama_kelas, jumlah_siswa FROM kelas WHERE kelas_id = ?", [params.id]);
+        const {id} = await params;
+
+        const [rows] = await poolDB.query("SELECT nama_kelas, jumlah_siswa FROM kelas WHERE kelas_id = ?", [id]);
 
         if ((rows as any[]).length === 0) {
             return Response.json({ success: false, error: `Kelas tidak ditemukan` }, { status: 404 })
@@ -15,13 +19,18 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
+// DELETE KELAS BY ID
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const conn = await poolDB.getConnection()
     try {        
         const {id} = await params;
 
         const url = new URL(req.url);
-        const user = url.searchParams.get("user");
+        const user = url.searchParams.get("user") || "";
+
+        if(user === "") {
+            return Response.json({success: false, error: "user tidak ditemukan"})
+        }
 
         await conn.beginTransaction();
 
@@ -33,15 +42,10 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
             throw new Error(`Gagal menghapus kelas, ${err}`)
         }
 
-        let logRes;
-        try {
-            const [res] = await conn.execute("INSERT INTO log (user, keterangan) VALUES (?, ?)", [user, `Menghapus kelas ${id}`]);
-            logRes = res;
-        } catch (err) {
-            throw new Error(`Logging gagal, ${err}`)
-        }
+        await logger(conn, user, `Menghapus kelas ${id}`)
+        conn.commit()
 
-        return Response.json({ success: true, deleteKelasRes, logRes })
+        return Response.json({ success: true, deleteKelasRes })
     } catch (err: any) {
         conn.rollback()
         return Response.json({ success: false, error: err.message }, { status: 500 })
@@ -75,24 +79,21 @@ export async function PATCH(req: Request, {params} : {params: Promise<{id: strin
         try {
             const [res] = await conn.execute("UPDATE kelas SET kelas_id = ?, nama_kelas = ? WHERE kelas_id = ?", [newKelasID, kelas.nama_kelas, id]);
             updateKelasRes = res;
-        } catch (err) {
-            throw new Error(`Gagal update kelas, ${err}`)
+        } catch (err: any) {
+            if (err.code === "ER_DUP_ENTRY") {
+                throw new Error("Kelas sudah ada, coba nama lain")
+            }
+            throw new Error(`Gagal update kelas, ${err.message}`)
         }
 
-        let logRes;
-        try {
-            const [res] = await conn.execute("INSERT INTO log (user, keterangan) VALUES (?, ?)", [kelas.user, `Menghapus kelas ${id}`]);
-            logRes = res;
-        } catch (err) {
-            throw new Error(`Logging gagal, ${err}`)
-        }
+        logger(conn, kelas.user, `Merubah kelas ${id}`)
+        conn.commit();
 
-        return Response.json({success: true, updateKelasRes, logRes})
+        return Response.json({success: true, updateKelasRes});
     } catch (err: any) {
-        conn.rollback()
-
-        return Response.json({success: false, error: err.message}, {status: 500})
+        conn.rollback();
+        return Response.json({success: false, error: err.message}, {status: 500});
     } finally {
-        conn.release()
+        conn.release();
     }
 }

@@ -1,5 +1,6 @@
 import poolDB from "@/lib/db";
 import { z } from "zod"
+import { logger } from "@/lib/logger";
 
 // AMBIL SEMUA KELAS
 export async function GET() {
@@ -12,17 +13,17 @@ export async function GET() {
 }
 
 // POST KELAS BARU
-const KelasReqSchema = z.object({
+const PostKelasSchema = z.object({
     nama_kelas: z.string().min(1, "Nama kelas tidak boleh kosong"),
     user: z.string().min(1, "User tidak boleh kosong")
 })
-type KelasReq = z.infer<typeof KelasReqSchema>
+type KelasReq = z.infer<typeof PostKelasSchema>
 
 export async function POST(req: Request) {
     const conn = await poolDB.getConnection();
     try {
         const payload = await req.json();
-        const kelas: KelasReq = KelasReqSchema.parse(payload);
+        const kelas: KelasReq = PostKelasSchema.parse(payload);
 
         await conn.beginTransaction();
 
@@ -41,23 +42,11 @@ export async function POST(req: Request) {
             }
             throw new Error(`Gagal menambahkan kelas, ${err.message}`)
         }
-
-        let logRes;
-        try {
-            const [res] = await conn.execute(
-                "INSERT INTO log (user, keterangan) VALUES (?, ?)",
-                [kelas.user, `Menambahkan kelas ${kelas.nama_kelas.toUpperCase()}`]
-            )
-
-            logRes = res;
-        } catch (err) {
-            throw new Error(`Logging gagal, ${err}`)
-        }
-
-
+        
+        await logger(conn, kelas.user, `Menambahkan kelas ${kelas.nama_kelas}`);
         await conn.commit();
 
-        return Response.json({ success: true, kelas: kelasRes, log: logRes })
+        return Response.json({ success: true, kelas: kelasRes })
     } catch (err: any) {
         await conn.rollback();
 
