@@ -1,26 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --color-primary: #0f4073;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(24, 24, 24);
+}
+
+.input-text {
+  border-radius: 8px;
+  padding: 10px 16px;
+}
+
+.button-primary {
+  border-radius: 8px;
+  background-color: #0f4073;
+  padding: 10px 16px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.button-primary:hover {
+  background-color: #0b2d52;
+}
+
+.button-primary:disabled {
+  background-color: gray;
+  cursor: no-drop;
+}
+
+.button-secondary {
+  border-radius: 8px;
+  gap: 8px;
+  color: #0f4073;
+  border: 1px solid #0f4073;
+  padding: 10px 16px;
+  cursor: pointer;
+  background-color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-secondary:hover {
+  background-color: #d9ecff;
 }
