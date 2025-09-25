@@ -71,8 +71,8 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
         </Popover>
       </div>
 
-      <div className="flex h-[calc(100dvh-90px)] overflow-auto">
-        <div className="w-[250px] flex flex-col gap-3 bg-white h-[calc(100dvh-90px)] py-5 px-4 text-lg">
+      <div className="flex">
+        <div className="w-[250px] flex flex-col gap-3 bg-white h-[calc(100dvh-90px)] py-5 px-4 text-lg sticky">
           <div
             className={`w-full cursor-pointer ${pathname === "/materi" && "font-semibold"}`}
             onClick={() => {
@@ -117,7 +117,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             )}
           </div>
         </div>
-        <div className="py-6 px-4 flex h-fit flex-1 overflow-auto">{children}</div>
+        <div className="py-6 px-4 flex max-h-[calc(100dvh-114px)] flex-1 overflow-auto">{children}</div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export default function AddMateri({ handleChangeTab }: { handleChangeTab: (tab: 
   const [clearRTE, setClearRTE] = useState<boolean>(false);
 
   const onSubmit = () => {
-    toast.success("Modul berhasil disimpan");
+    toast.success("Modul berhasil ditambahkan");
     handleChangeTab(1);
   };
 

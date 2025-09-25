@@ -22,6 +22,6 @@ export default function PR() {
   } else if (selectedTab === 3) {
     return <AddPR handleChangeTab={handleChangeTab} />;
   } else {
-    return <ListPRDone handleChangeTab={handleChangeTab} />;
+    return <ListPRDone handleChangeTab={handleChangeTab} id={id} />;
   }
 }

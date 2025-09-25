@@ -5,11 +5,13 @@ export default function InputCustom({
   onChange,
   placeholder,
   className,
+  type = "text",
 }: {
   value: any;
   onChange: (data: string) => void;
   placeholder: string;
   className?: string;
+  type?: string;
 }) {
-  return <input className={`input-text ${className}`} value={value} onChange={(evt) => onChange(evt.target.value)} placeholder={placeholder} />;
+  return <input type={type} className={`input-text ${className}`} value={value} onChange={(evt) => onChange(evt.target.value)} placeholder={placeholder} />;
 }
