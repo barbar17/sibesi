@@ -3,7 +3,21 @@
 import { ChevronDownIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export default function CollapseCustom({ data, namaId, namaKonten }: { data: any; namaId: string; namaKonten: string }) {
+export default function CollapseCustom({
+  data,
+  namaId,
+  namaIdDetail,
+  namaKonten,
+  onDetail,
+  onAdd,
+}: {
+  data: any;
+  namaId: string;
+  namaKonten: string;
+  namaIdDetail: string;
+  onDetail: (id: number) => void;
+  onAdd: () => void;
+}) {
   const [showModul, setShowModul] = useState<number>(0);
 
   return (
@@ -21,7 +35,7 @@ export default function CollapseCustom({ data, namaId, namaKonten }: { data: any
             }}
           >
             <div className="flex gap-4 items-center">
-              <div className="w-8 h-8 rounded-full bg-primary flex justify-center items-center">
+              <div className="w-8 h-8 rounded-full bg-primary flex justify-center items-center cursor-pointer" onClick={onAdd}>
                 <PlusIcon className="w-4 h-4 text-white font-bold" />
               </div>
               <div className="text-xl">{item?.nama}</div>
@@ -33,7 +47,9 @@ export default function CollapseCustom({ data, namaId, namaKonten }: { data: any
             <div className="flex flex-col gap-1 text-gray-800 text-lg">
               <div className="h-[1px] bg-gray-300 w-full mt-2" />
               {item[namaKonten]?.map((itemModul: any, indexModul: number) => (
-                <div className="flex cursor-pointer">{itemModul?.nama}</div>
+                <div className="flex cursor-pointer ps-16" onClick={() => onDetail(itemModul[namaIdDetail])}>
+                  {itemModul?.nama}
+                </div>
               ))}
             </div>
           )}

@@ -1,25 +1,24 @@
 "use client";
 
-import LoadingStore from "@/app/store/loadingStore";
-import CollapseCustom from "@/components/collapseCustom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import ListMateri from "./list";
+import DetailMateri from "./detail";
+import AddMateri from "./add";
 
 export default function Materi() {
-  const setLoading = LoadingStore((state) => state.setLoading);
+  const [selectedTab, setSelectedTab] = useState<number>(1);
+  const [id, setId] = useState<number>(0);
 
-  const [data, setData] = useState<any[]>([
-    { id: 1, nama: "Matematika", modul: [{ nama: "modul1" }, { nama: "modul2" }, { nama: "modul3" }, { nama: "modul4" }] },
-    { id: 2, nama: "Matematika", modul: [{ nama: "modul1" }, { nama: "modul2" }, { nama: "modul3" }, { nama: "modul4" }] },
-    { id: 3, nama: "Matematika", modul: [{ nama: "modul1" }, { nama: "modul2" }, { nama: "modul3" }, { nama: "modul4" }] },
-  ]);
+  const handleChangeTab = (tab: number, idDetail?: any) => {
+    idDetail && setId(idDetail);
+    setSelectedTab(tab);
+  };
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
-  return (
-    <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
-      <CollapseCustom data={data} namaId="id" namaKonten="modul" />
-    </div>
-  );
+  if (selectedTab === 1) {
+    return <ListMateri handleChangeTab={handleChangeTab} />;
+  } else if (selectedTab === 2) {
+    return <DetailMateri id={id} handleChangeTab={handleChangeTab} />;
+  } else {
+    return <AddMateri handleChangeTab={handleChangeTab} />;
+  }
 }

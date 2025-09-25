@@ -23,7 +23,7 @@ export default function Dashboard() {
   return (
     <div className="bg-white rounded-lg w-full p-6 grid grid-cols-4 gap-6">
       {data?.map((item: any, index: number) => (
-        <div className="rounded-lg border border-gray-300 shadow-2xl flex flex-col p-4 w-full gap-6" key={index}>
+        <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6" key={index}>
           <div className="flex flex-col gap-1">
             <div className="text-2xl font-semibold">{item?.nama}</div>
             <div className="text-lg">{item?.kelas}</div>

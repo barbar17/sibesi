@@ -1,0 +1,77 @@
+.ProseMirror {
+  border: 1px solid #dfe4ea;
+  border-radius: 8px;
+  width: 100%;
+  padding: 60px 16px 16px 16px;
+  color: #16191c;
+  min-height: 290px;
+  &::-webkit-textfield-decoration-container {
+    display: none;
+  }
+}
+
+.ProseMirror:focus {
+  outline-color: black;
+  outline-width: 1px;
+  outline-style: double;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: black;
+  pointer-events: none;
+  height: 0;
+}
+
+.tiptap {
+  mark {
+    background-color: #faf594;
+    border-radius: 0.4rem;
+    box-decoration-break: clone;
+    padding: 0.1rem 0.3rem;
+  }
+
+  ul {
+    list-style: disc;
+    padding-left: 16px;
+  }
+
+  ol {
+    list-style: decimal;
+    padding-left: 16px;
+  }
+
+  img {
+    width: 300px;
+  }
+
+  a {
+    color: blue;
+    cursor: pointer;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  h3 {
+    font-size: 1.17em;
+  }
+
+  h4 {
+    font-size: 1em;
+  }
+
+  h5 {
+    font-size: 0.83em;
+  }
+
+  h6 {
+    font-size: 0.67em;
+  }
+}

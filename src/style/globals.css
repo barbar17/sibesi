@@ -15,6 +15,7 @@ body {
 .input-text {
   border-radius: 8px;
   padding: 10px 16px;
+  border: 1px solid gray;
 }
 
 .button-primary {
