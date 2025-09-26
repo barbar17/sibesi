@@ -34,13 +34,13 @@ export async function POST(req: Request) {
 
         let insertMapelRes;
         try {
-            const [res] = await conn.execute("INSERT INTO mapel (mapel_id, kelas_id, nama_mapel)", 
+            const [res] = await conn.execute("INSERT INTO mapel (mapel_id, kelas_id, nama_mapel) VALUES (?, ?, ?)", 
                 [mapelID, dataMapel.kelas_id, dataMapel.nama_mapel]);
             
             insertMapelRes = res
         } catch (err: any) {
             if (err.code === "ER_DUP_ENTRY") {
-                throw new Error("Mata pelajran sudah ada, coba yang lain")
+                throw new Error("Mata pelajaran sudah ada, coba yang lain")
             }
             throw new Error(`Gagal menambahkan mapel, ${err.messsage}`)
         }
