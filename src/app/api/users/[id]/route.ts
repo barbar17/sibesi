@@ -2,18 +2,18 @@ import poolDB from "@/lib/db";
 import { logger } from "@/lib/logger";
 import {z} from "zod";
 
-// GET USER BY ID
-// export async function GET(req: Request, {params}: {params: Promise<{id:string}>}) {
-//     try {
-//         const {id} = await params;
+// GET User BY ID
+export async function GET(req: Request, {params}: {params: Promise<{id:string}>}) {
+    try {
+        const {id} = await params;
 
-//         const [rows] = await poolDB.query("SELECT kelas_id, nama_mapel FROM mapel WHERE mapel_id = ?", [id]);
+        const [rows] = await poolDB.query("SELECT user_id, kelas_id, mapel_id, role, nama_user FROM user WHERE user_id = ?", [id]);
 
-//         return Response.json({success: true, data: rows})
-//     } catch (err) {
-//         return Response.json({success: false, error: err}, {status: 500})
-//     }
-// }
+        return Response.json({success: true, data: rows})
+    } catch (err) {
+        return Response.json({success: false, error: err}, {status: 500})
+    }
+}
 
 // // UPDATE USER
 // const UpdateUserSchema = z.object({
