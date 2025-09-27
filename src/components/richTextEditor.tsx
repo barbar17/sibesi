@@ -71,18 +71,17 @@ export default function RichTextEditor({
     const file = e.target.files?.[0];
     if (file) {
       setImage("");
-      // setLoading(true);
+      setLoading(true);
 
-      // console.log("coba", file);
-      // ApiRoute.postImage(jenis, file)
-      //   .then((res) => {
-      //     console.log("coba", res);
-      //     setLoading(false);
-      //   })
-      //   .catch((err) => {
-      //     toast.error(err);
-      //     setLoading(false);
-      //   });
+      ApiRoute.postImage(jenis, file)
+        .then((res) => {
+          console.log("coba", res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
 
       const imageUrl = URL.createObjectURL(file);
       editor?.chain().focus().setImage({ src: imageUrl }).run();
