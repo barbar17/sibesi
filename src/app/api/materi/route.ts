@@ -14,6 +14,7 @@ type RawMateri = {
 type Modul = {
     id: number;
     nama: string;
+    status: number;
 };
 
 type Mapel = {
@@ -33,7 +34,8 @@ export async function GET(req: NextRequest) {
 
         const [rows] = await poolDB.query<RowDataPacket[]>(`SELECT mapel.mapel_id, nama_mapel, materi_id, materi.nama AS nama_materi, status FROM mapel
             JOIN materi ON (materi.mapel_id = mapel.mapel_id)
-            JOIN kelas ON (kelas.kelas_id = mapel.kelas_id)
+            JOIN kelas_mapel ON (kelas_mapel.mapel_id = mapel.mapel_id)
+            JOIN kelas ON (kelas.kelas_id = kelas_mapel.kelas_id)
             WHERE kelas.kelas_id = ?`, [kelas])
 
         const transformData = (data: RawMateri[]): Mapel[] => {
@@ -51,6 +53,7 @@ export async function GET(req: NextRequest) {
                 mapel.modul.push({
                     id: item.materi_id,
                     nama: item.nama_materi,
+                    status: item.status,
                 });
             });
 
