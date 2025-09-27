@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
 import poolDB from "@/lib/db";
 import { RowDataPacket } from "mysql2";
+import z from "zod";
 
 type RawMateri = {
     mapel_id: string;
@@ -62,30 +61,60 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json({ success: true, data: result });
     } catch (err: any) {
+        if (err instanceof z.ZodError) {
+            return Response.json({ success: false, error: err.issues }, { status: 400 })
+        }
         return NextResponse.json({ success: false, data: err.message });
     }
 }
 
-// UPLOAD GAMBAR
-export async function POST(req: NextRequest) {
-    try {
-        const formData = await req.formData();
-        const file = formData.get("file") as File;
+const MateriSchema = z.object({
+    mapel_id: z.string().min(1, "ID mata pelajaran tidak boleh kosong"),
+    nama: z.string().min(1, "Nama materi tidak boleh kosong"),
+    isi: z.string().min(1, "ID mata pelajaran tidak boleh kosong"),
+})
 
-        if (!file) {
-            return NextResponse.json({ error: "File tidak ditemukan" }, { status: 400 });
+type MateriReq = z.infer<typeof MateriSchema>
+
+export async function POST(req: Request) {
+    const conn = await poolDB.getConnection()
+    try {
+        const payload = await req.json()
+        const data: MateriReq = MateriSchema.parse(payload);
+
+        const [rows]: any = await conn.query("SELECT comment_id FROM comment ORDER BY comment_id DESC LIMIT 1 FOR UPDATE");
+        const maxID = rows[0].comment_id;
+        const newID = maxID + 1
+
+        await conn.beginTransaction()
+
+        let commentRes;
+        try {
+            const [res] = await conn.execute("INSERT INTO comment (comment_id, jumlah) VALUES (?, ?)", [newID, 0]);
+            commentRes = res;
+        } catch (err) {
+            throw new Error(`Gagal menambahkan comment field, ${err}`);
         }
 
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        let materiRes;
+        try {
+            const [res] = await conn.execute("INSERT INTO materi (mapel_id, comment_id, nama, status, isi) VALUES (?, ?, ?, ?, ?)",
+                [data.mapel_id, newID, data.nama, 0, data.isi]
+            )
+            materiRes = res;
+        } catch (err) {
+            throw new Error(`Gagal menambahkan materi, ${err}`);
+        }
 
-        const filePath = path.join(process.cwd(), "public/materi", file.name);
-        await fs.writeFile(filePath, buffer);
-
-        return NextResponse.json({ success: true, url: `/materi/${file.name}` });
-    } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+        await conn.commit()
+        return Response.json({success: true, commentRes, materiRes})
+    } catch (err: any) {
+        await conn.rollback();
+        if (err instanceof z.ZodError) {
+            return Response.json({ success: false, error: err.issues }, { status: 400 })
+        }
+        return Response.json({success: false, error: err.message})
+    } finally {
+        conn.release()
     }
 }
-

@@ -9,9 +9,9 @@ const Api = axios.create({
 });
 
 Api.interceptors.response.use(
-  (response) => response,
+  (response) => response?.data?.data || response?.data,
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(error?.response?.data?.message || error);
   }
 );
 

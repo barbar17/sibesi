@@ -1,11 +1,16 @@
 import Api from "@/utils/api";
 
 const ApiRoute = {
-  //   GetMasterJenisProdukKadar: (params: string = "") => {
-  //     return Api.get(`/msgadaimasweb/v1/users/master${params}`);
-  //   },
+  getDashboard: (params: string = "") => {
+    return Api.get(`/dashboard${params}`);
+  },
+
   postLogin: (data: any) => {
     return Api.post(`/login`, data);
+  },
+
+  getProfile: (data: any) => {
+    return Api.post(`/users/profile`, data);
   },
 };
 

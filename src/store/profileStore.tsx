@@ -5,7 +5,7 @@ interface ProfileInterface {
   setProfile: (newProfile: any) => void;
 }
 
-const ProfileStore = create<ProfileInterface>((set) => ({
+const ProfileStore = create<ProfileInterface>((set: any) => ({
   profile: { nama: "nama1" },
   setProfile: (newProfile: any) => set({ profile: newProfile }),
 }));

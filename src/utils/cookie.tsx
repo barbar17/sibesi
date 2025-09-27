@@ -1,18 +1,15 @@
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 
-export const saveToken = (token: string, refreshToken: string) => {
+export const saveToken = (token: string) => {
   var tokenEncrypted = CryptoJS.AES.encrypt(token, process.env.NEXT_PUBLIC_KEY_AES || "").toString();
-  var refreshTokenEncrypted = CryptoJS.AES.encrypt(refreshToken, process.env.NEXT_PUBLIC_KEY_AES || "").toString();
-  if (token && refreshToken) {
+  if (token) {
     Cookies.set(process.env.NEXT_PUBLIC_KEY_TOKEN || "", tokenEncrypted);
-    Cookies.set(process.env.NEXT_PUBLIC_KEY_REFRESH_TOKEN || "", refreshTokenEncrypted);
   }
 };
 
 export const deleteAllToken = () => {
   Cookies.remove(process.env.NEXT_PUBLIC_KEY_TOKEN || "");
-  Cookies.remove(process.env.NEXT_PUBLIC_KEY_REFRESH_TOKEN || "");
 };
 
 export const getToken = (typeToken: string) => {
@@ -24,8 +21,4 @@ export const getToken = (typeToken: string) => {
   } else {
     return "";
   }
-};
-
-export const doEraseAllReload = () => {
-  window.location.reload();
 };

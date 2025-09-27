@@ -1,45 +1,53 @@
 "use client";
 
+import ApiRoute from "@/api/apiRoute";
 import LoadingStore from "@/store/loadingStore";
+import ProfileStore from "@/store/profileStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
   const setLoading = LoadingStore((state) => state.setLoading);
+  const isProfile = ProfileStore((state) => state.profile);
   const [showPopover, setShowPopover] = useState<boolean>(false);
 
-  const [data, setData] = useState<any[]>([
-    { nama: "Matematika", kelas: "11", guru: "Pak Guru A", modulSelesai: 9, totalModul: 9 },
-    { nama: "Matematika", kelas: "11", guru: "Pak Guru A", modulSelesai: 0, totalModul: 9 },
-    { nama: "Matematika", kelas: "11", guru: "Pak Guru A", modulSelesai: 5, totalModul: 9 },
-    { nama: "Matematika", kelas: "11", guru: "Pak Guru A", modulSelesai: 5, totalModul: 9 },
-    { nama: "Matematika", kelas: "11", guru: "Pak Guru A", modulSelesai: 5, totalModul: 9 },
-    { nama: "Matematika", kelas: "11", guru: "Pak Guru A", modulSelesai: 5, totalModul: 9 },
-  ]);
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    setLoading(false);
-  }, []);
+    if (isProfile?.kelas_id) {
+      setLoading(true);
+      ApiRoute.getDashboard(isProfile?.role == "sisea" ? `?kelas=${isProfile?.kelas_id}` : `/guru?mapel=${isProfile?.mapel_id}`)
+        .then((res: any) => {
+          setData(res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    }
+  }, [isProfile]);
 
   return (
     <div className="bg-white rounded-lg w-full p-6 grid lg:grid-cols-4 grid-cols-1 gap-6 overflow-auto">
       {data?.map((item: any, index: number) => (
-        <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6" key={index}>
+        <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6 h-fit" key={index}>
           <div className="flex flex-col gap-1">
-            <div className="text-2xl font-semibold">{item?.nama}</div>
-            <div className="text-lg">{item?.kelas}</div>
+            <div className="text-2xl font-semibold">{item?.nama_mapel}</div>
+            <div className="text-lg">{item?.nama_materi}</div>
           </div>
           <div className="flex flex-col gap-2">
-            <div className="text-lg font-medium">{item?.guru}</div>
+            <div className="text-lg font-medium">{item?.nama_user}</div>
             <div className="flex flex-col">
               <div>
-                {item?.modulSelesai}/{item?.totalModul} modul
+                {item?.materi_selesai}/{item?.total_materi} modul
               </div>
               <div className="flex relative w-full bg-gray-300 rounded-sm h-4">
                 <div
-                  className={`h-4 rounded-l-sm bg-green-400 ${item?.modulSelesai === item?.totalModul && "rounded-r-sm"}`}
-                  style={{ width: `${(item?.modulSelesai / item?.totalModul) * 100}%` }}
+                  className={`h-4 rounded-l-sm bg-green-400 ${item?.materi_selesai === item?.total_materi && "rounded-r-sm"}`}
+                  style={{ width: `${(item?.materi_selesai / item?.total_materi) * 100}%` }}
                 />
               </div>
             </div>

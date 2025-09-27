@@ -3,11 +3,12 @@
 import ApiRoute from "@/api/apiRoute";
 import InputCustom from "@/components/inputCustom";
 import LoadingStore from "@/store/loadingStore";
-import { getToken } from "@/utils/cookie";
+import { getToken, saveToken } from "@/utils/cookie";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const setLoading = LoadingStore((state: any) => state.setLoading);
@@ -18,13 +19,13 @@ export default function Login() {
   const onSubmit = () => {
     setLoading(true);
     ApiRoute.postLogin(form)
-      .then((res) => {
-        console.log("coba", res);
-        // router.push("/dashboard");
+      .then((res: any) => {
+        saveToken(res?.token);
+        router.push("/dashboard");
         setLoading(false);
       })
       .catch((err) => {
-        console.log("coba", err);
+        toast.error(err);
         setLoading(false);
       });
   };
