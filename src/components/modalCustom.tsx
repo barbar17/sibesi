@@ -14,7 +14,7 @@ export default function ModalCustom({
   widthCustom?: string;
 }) {
   return (
-    <Modal open={isOpen} onClose={onClose} center showCloseIcon={false} focusTrapped={false} styles={{ modal: { width: widthCustom, maxWidth: "300px" } }}>
+    <Modal open={isOpen} onClose={onClose} center showCloseIcon={false} focusTrapped={false} styles={{ modal: { width: widthCustom, maxWidth: "400px" } }}>
       <div>{children}</div>
     </Modal>
   );

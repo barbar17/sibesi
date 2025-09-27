@@ -11,7 +11,7 @@ const Api = axios.create({
 Api.interceptors.response.use(
   (response) => response?.data?.data || response?.data,
   (error) => {
-    return Promise.reject(error?.response?.data?.message || error);
+    return Promise.reject(error?.response?.data?.message || error?.response?.data?.error);
   }
 );
 
