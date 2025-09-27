@@ -50,6 +50,9 @@ export async function POST(req: Request) {
         return Response.json({success: true, insertMapelRes})
     } catch (err: any) {
         conn.rollback()
+        if (err instanceof z.ZodError) {
+            return Response.json({ success: false, error: err.issues }, { status: 400 })
+        }
         return Response.json({success: false, error: err.message || err}, {status: 500})
     } finally {
         conn.release()
