@@ -22,8 +22,8 @@ export default function AddMateri({ handleChangeTab }: { handleChangeTab: (tab: 
   return (
     <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
       <div className="flex justify-center items-center relative">
-        <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-        <div className="text-4xl">Tambah Materi</div>
+        <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
+        <div className="lg:text-4xl text-xl">Tambah Materi</div>
       </div>
       <div className="flex gap-3">
         <InputCustom value={form?.judul} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, judul: evt })} className="flex-1" />

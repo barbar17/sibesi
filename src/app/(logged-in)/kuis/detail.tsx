@@ -64,8 +64,8 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
     <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4 overflow-auto">
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2 justify-center items-center relative">
-          <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-          <div className="text-4xl">{data?.nama}</div>
+          <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
+          <div className="lg:text-4xl text-xl">{data?.nama}</div>
         </div>
         <div className="flex w-full justify-end">
           {parseInt((time / 60).toString())}:{time % 60}
@@ -73,9 +73,9 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
       </div>
       <div className="flex flex-col gap-2">
         {data?.soal?.map((item: any, index: number) => (
-          <div key={index} className="flex flex-row shadow-xl gap-6 border-gray-300 border p-4 justify-between">
+          <div key={index} className="flex flex-col lg:flex-row shadow-sm rounded-sm gap-6 border-gray-300 border p-4 justify-between">
             <div dangerouslySetInnerHTML={{ __html: item?.soal }} />
-            <div className="w-[300px] flex flex-col gap-2">
+            <div className="w-full lg:w-[300px] flex flex-col gap-2">
               {item?.tipe === 1 ? (
                 <div className="flex flex-col gap-1">
                   {item?.option?.map((itemOption: any, indexOption: number) => (
@@ -96,9 +96,9 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
         Simpan
       </button> */}
 
-      {/* <button className="button-primary" onClick={() => handleChangeTab(4)}>
+      <button className="button-primary" onClick={() => handleChangeTab(4)}>
         Lihat Kuis Siswa
-      </button> */}
+      </button>
 
       <div className="flex gap-2">
         <InputCustom onChange={(value) => setNilai(value)} placeholder="Nilai" value={nilai} />

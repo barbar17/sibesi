@@ -129,7 +129,7 @@ export default function RichTextEditor({ value, handleChange, isClear }: { value
 
       <EditorContent editor={editor} />
 
-      <div className="absolute top-0 flex flex-row h-12 mx-[2px] border-b items-center border-[#E2E8F0] w-[calc(100%-4px)] text-[#475569] font-[700] text-[16px]">
+      <div className="absolute top-0 flex flex-row lg:py-0 py-4 flex-wrap h-fit mx-[2px] border-b items-center border-[#E2E8F0] w-[calc(100%-4px)] text-[#475569] font-[700] text-[16px]">
         <select
           value={"Paragraph"}
           className="px-3 cursor-pointer text-[16px]"

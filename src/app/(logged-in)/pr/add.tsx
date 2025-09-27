@@ -22,8 +22,8 @@ export default function AddPR({ handleChangeTab }: { handleChangeTab: (tab: numb
   return (
     <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4 overflow-auto">
       <div className="flex justify-center items-center relative">
-        <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-        <div className="text-4xl">Tambah Tugas</div>
+        <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
+        <div className="lg:text-4xl text-xl">Tambah Tugas</div>
       </div>
       <div className="flex gap-3">
         <InputCustom value={form?.judul} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, judul: evt })} className="flex-1" />

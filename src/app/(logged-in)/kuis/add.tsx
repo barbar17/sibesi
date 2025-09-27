@@ -54,8 +54,8 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
   return (
     <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4 overflow-auto">
       <div className="flex justify-center items-center relative">
-        <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-        <div className="text-4xl">Tambah Kuis</div>
+        <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6  cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
+        <div className="lg:text-4xl text-xl">Tambah Kuis</div>
       </div>
       <div className="flex gap-3">
         <InputCustom value={form?.judul} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, judul: evt })} className="flex-1" />
@@ -90,12 +90,14 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
       </div>
 
       {soal?.map((item: any, index: number) => (
-        <div key={index} className="flex flex-row shadow-xl gap-6 border-gray-300 border p-4 justify-between relative">
+        <div key={index} className="flex lg:flex-row flex-col shadow-xl gap-6 border-gray-300 border p-4 justify-between relative">
           <RichTextEditor value={item?.soal} handleChange={(evt) => handleSoal(evt, index, "soal")} />
           <div className="flex flex-col gap-3 w-[300px]">
             <div className="flex flex-row gap-4 items-center">
               <div className="whitespace-nowrap font-semibold">Tipe Soal</div>
-              <Dropdown placeholder="Tipe" options={option} value={item?.tipe} handleOnChange={(evt) => handleSoal(evt, index, "tipe")} width="170px" />
+              <div className="lg:w-[170px] w-[150px]">
+                <Dropdown placeholder="Tipe" options={option} value={item?.tipe} handleOnChange={(evt) => handleSoal(evt, index, "tipe")} width="100%" />
+              </div>
             </div>
             {item.tipe?.value === 1 && (
               <div className="flex flex-col gap-1">

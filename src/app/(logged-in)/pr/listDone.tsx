@@ -89,8 +89,8 @@ export default function ListPRDone({ handleChangeTab, id }: { handleChangeTab: (
 
       <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
         <div className="flex justify-center items-center relative">
-          <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-          <div className="text-4xl">{data?.nama}</div>
+          <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
+          <div className="lg:text-4xl text-xl">{data?.nama}</div>
         </div>
         <TableCustom columns={column} data={data?.data} page={data?.page} page_size={data?.page_size} total={data?.total} total_page={data?.total_page} />
       </div>

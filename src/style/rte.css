@@ -2,7 +2,7 @@
   border: 1px solid #dfe4ea;
   border-radius: 8px;
   width: 100%;
-  padding: 60px 16px 16px 16px;
+  padding: 160px 16px 16px 16px;
   color: #16191c;
   min-height: 290px;
   &::-webkit-textfield-decoration-container {
@@ -73,5 +73,11 @@
 
   h6 {
     font-size: 0.67em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ProseMirror {
+    padding: 60px 16px 16px 16px;
   }
 }

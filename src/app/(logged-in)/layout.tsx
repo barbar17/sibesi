@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftEndOnRectangleIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftEndOnRectangleIcon, Bars3Icon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,23 +18,28 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
     { label: "Kelas", value: "8A" },
     { label: "NIS", value: "0011111" },
   ]);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
 
   return (
     <div className="flex flex-col bg-gray-300 h-[100dvh] w-[100vw]">
-      <div className="flex justify-between w-full bg-white py-3 px-4 h-[90px] items-center shadow-xl border-b border-gray-300">
-        <Image
-          src={"/logo_landscape.png"}
-          alt="logo"
-          width={100}
-          height={100}
-          className="w-[200px] h-fit cursor-pointer"
-          onClick={() => {
-            if (pathname !== "/dashboard") {
-              setLoading(true);
-              router.push("/dashboard");
-            }
-          }}
-        />
+      <div className="flex justify-between w-full bg-white py-3 px-4 lg:h-[90px] h-[45px] items-center shadow-xl border-b border-gray-300">
+        <div className="flex gap-4 items-center">
+          <Image
+            src={"/logo_landscape.png"}
+            alt="logo"
+            width={100}
+            height={100}
+            className="w-[100px] lg:w-[200px] h-fit cursor-pointer"
+            onClick={() => {
+              if (pathname !== "/dashboard") {
+                setLoading(true);
+                setShowMenu(false);
+                router.push("/dashboard");
+              }
+            }}
+          />
+          <Bars3Icon className="text-gray-800 w-6 h-6 cursor-pointer" onClick={() => setShowMenu(!showMenu)} />
+        </div>
 
         <Popover
           isOpen={showProfile}
@@ -55,6 +60,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                 className="button-secondary"
                 onClick={() => {
                   setLoading(true);
+                  setShowMenu(false);
                   router.push("/login");
                 }}
               >
@@ -65,19 +71,24 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
           }
         >
           <div className="flex gap-3 cursor-pointer items-center" onClick={() => setShowProfile(!showProfile)}>
-            <div className="text-lg">Nama Siswa</div>
+            <div className="lg:text-lg">Nama Siswa</div>
             <ChevronDownIcon className="text-gray-800 w-4 h-4" />
           </div>
         </Popover>
       </div>
 
-      <div className="flex">
-        <div className="w-[250px] flex flex-col gap-3 bg-white h-[calc(100dvh-90px)] py-5 px-4 text-lg sticky">
+      <div className="flex relative">
+        <div
+          className={`w-full lg:w-[250px] lg:flex flex-col gap-3 bg-white h-[calc(100dvh-45px)] lg:h-[calc(100dvh-90px)] py-5 px-4 text-lg lg:sticky absolute z-10 ${
+            showMenu ? "flex" : "hidden"
+          }`}
+        >
           <div
             className={`w-full cursor-pointer ${pathname === "/materi" && "font-semibold"}`}
             onClick={() => {
               if (pathname !== "/materi") {
                 setLoading(true);
+                setShowMenu(false);
                 router.push("/materi");
               }
             }}
@@ -96,6 +107,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                   onClick={() => {
                     if (pathname !== "/pr") {
                       setLoading(true);
+                      setShowMenu(false);
                       router.push("/pr");
                     }
                   }}
@@ -103,10 +115,11 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                   Pekerjaan Rumah
                 </div>
                 <div
-                  className={`w-full cursor-pointer ${pathname === "kuis" && "font-semibold"}`}
+                  className={`w-full cursor-pointer ${pathname === "/kuis" && "font-semibold"}`}
                   onClick={() => {
                     if (pathname !== "/kuis") {
                       setLoading(true);
+                      setShowMenu(false);
                       router.push("/kuis");
                     }
                   }}
@@ -117,7 +130,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             )}
           </div>
         </div>
-        <div className="py-6 px-4 flex max-h-[calc(100dvh-90px)] flex-1 overflow-auto">{children}</div>
+        <div className="py-6 px-4 flex max-h-[calc(100dvh-45px)] lg:max-h-[calc(100dvh-90px)] flex-1 overflow-auto">{children}</div>
       </div>
     </div>
   );

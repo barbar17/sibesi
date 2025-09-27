@@ -51,14 +51,14 @@ export default function DetailPR({ handleChangeTab, id }: { handleChangeTab: (ta
 
       <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
         <div className="flex flex-row gap-2 justify-center items-center relative">
-          <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-          <div className="text-4xl">{data?.nama}</div>
+          <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
+          <div className="lg:text-4xl text-xl">{data?.nama}</div>
         </div>
-        <div className="w-full flex gap-3">
+        <div className="w-full flex gap-3 lg:flex-row flex-col">
           <div className="flex flex-1">
             <div dangerouslySetInnerHTML={{ __html: data?.isi }} className="text-gray-800" />
           </div>
-          <div className="flex flex-col justify-between gap-6 w-[250px]">
+          <div className="flex flex-col justify-between gap-6 lg:w-[250px] w-full">
             <div className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <div className="underline text-blue-600 cursor-pointer">Nama Tugas</div>
