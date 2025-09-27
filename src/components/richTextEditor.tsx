@@ -17,10 +17,10 @@ import Highlight from "@tiptap/extension-highlight";
 import Heading, { Level } from "@tiptap/extension-heading";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import LoadingStore from "@/app/store/loadingStore";
+import LoadingStore from "@/store/loadingStore";
 import "@/style/rte.css";
 
-export default function RichTextEditor({ value, handleChange, isClear }: { value: any; handleChange: (value: string) => void; isClear: boolean }) {
+export default function RichTextEditor({ value, handleChange, isClear }: { value: any; handleChange: (value: string) => void; isClear?: boolean }) {
   const editor = useEditor({
     extensions: [
       StarterKit,

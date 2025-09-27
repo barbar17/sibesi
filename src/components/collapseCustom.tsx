@@ -23,7 +23,7 @@ export default function CollapseCustom({
   return (
     <>
       {data?.map((item: any, index: number) => (
-        <div className="flex flex-col p-3 border-gray-300 border rounded-lg justify-center ">
+        <div className="flex flex-col p-3 border-gray-300 border rounded-lg justify-center" key={index}>
           <div
             className="flex justify-between cursor-pointer items-center"
             onClick={() => {
@@ -47,7 +47,7 @@ export default function CollapseCustom({
             <div className="flex flex-col gap-1 text-gray-800 text-lg">
               <div className="h-[1px] bg-gray-300 w-full mt-2" />
               {item[namaKonten]?.map((itemModul: any, indexModul: number) => (
-                <div className="flex cursor-pointer ps-16" onClick={() => onDetail(itemModul[namaIdDetail])}>
+                <div className="flex cursor-pointer ps-16" onClick={() => onDetail(itemModul[namaIdDetail])} key={indexModul}>
                   {itemModul?.nama}
                 </div>
               ))}

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Popover } from "react-tiny-popover";
-import LoadingStore from "../store/loadingStore";
+import LoadingStore from "../../store/loadingStore";
 
 export default function LayoutLoggedIn({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -117,7 +117,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             )}
           </div>
         </div>
-        <div className="py-6 px-4 flex max-h-[calc(100dvh-114px)] flex-1 overflow-auto">{children}</div>
+        <div className="py-6 px-4 flex max-h-[calc(100dvh-90px)] flex-1 overflow-auto">{children}</div>
       </div>
     </div>
   );

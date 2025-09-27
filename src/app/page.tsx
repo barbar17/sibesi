@@ -1,8 +1,8 @@
 "use client";
 
+import LoadingStore from "@/store/loadingStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import LoadingStore from "./store/loadingStore";
 
 export default function Home() {
   const router = useRouter();

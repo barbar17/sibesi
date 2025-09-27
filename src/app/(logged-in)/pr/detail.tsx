@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingStore from "@/app/store/loadingStore";
+import LoadingStore from "@/store/loadingStore";
 import InputCustom from "@/components/inputCustom";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingStore from "@/app/store/loadingStore";
+import LoadingStore from "@/store/loadingStore";
 import CollapseCustom from "@/components/collapseCustom";
 import { useEffect, useState } from "react";
 
