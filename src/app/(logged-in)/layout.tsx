@@ -3,22 +3,50 @@
 import { ArrowLeftEndOnRectangleIcon, Bars3Icon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
-import LoadingStore from "../../store/loadingStore";
+import { deleteAllToken, getToken } from "@/utils/cookie";
+import ApiRoute from "@/api/apiRoute";
+import { toast } from "react-toastify";
+import LoadingStore from "@/store/loadingStore";
+import ProfileStore from "@/store/profileStore";
 
 export default function LayoutLoggedIn({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const setLoading = LoadingStore((state) => state.setLoading);
+  const setProfile = ProfileStore((state) => state.setProfile);
+  const [profileNow, setProfileNow] = useState<any>();
   const pathname = usePathname();
   const [showTugas, setShowTugas] = useState<boolean>(true);
   const [showProfile, setShowProfile] = useState<boolean>(false);
-  const [dataProfile, setDataProfile] = useState<any[]>([
-    { label: "Nama", value: "Nama Siswa" },
-    { label: "Kelas", value: "8A" },
-    { label: "NIS", value: "0011111" },
-  ]);
+  const [dataProfile, setDataProfile] = useState<any[]>([]);
   const [showMenu, setShowMenu] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoading(true);
+    if (getToken(process.env.NEXT_PUBLIC_KEY_TOKEN!)) {
+      ApiRoute.getProfile(getToken(process.env.NEXT_PUBLIC_KEY_TOKEN!))
+        .then((res) => {
+          setProfile(res);
+          setProfileNow(res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    } else {
+      router.push("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    setDataProfile([
+      { label: "Nama", value: profileNow?.nama_user },
+      { label: profileNow?.role === "siswa" ? "Kelas" : "Mata Pelajaran", value: profileNow?.role === "siswa" ? profileNow?.kelas_id : profileNow?.mapel_id },
+      { label: profileNow?.role === "siswa" ? "NIS" : "NIK", value: profileNow?.user_id },
+    ]);
+  }, [profileNow]);
 
   return (
     <div className="flex flex-col bg-gray-300 h-[100dvh] w-[100vw]">
@@ -60,7 +88,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                 className="button-secondary"
                 onClick={() => {
                   setLoading(true);
-                  setShowMenu(false);
+                  deleteAllToken();
                   router.push("/login");
                 }}
               >
@@ -71,7 +99,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
           }
         >
           <div className="flex gap-3 cursor-pointer items-center" onClick={() => setShowProfile(!showProfile)}>
-            <div className="lg:text-lg">Nama Siswa</div>
+            <div className="lg:text-lg">{profileNow?.nama_user}</div>
             <ChevronDownIcon className="text-gray-800 w-4 h-4" />
           </div>
         </Popover>
@@ -130,7 +158,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             )}
           </div>
         </div>
-        <div className="py-6 px-4 flex max-h-[calc(100dvh-45px)] lg:max-h-[calc(100dvh-90px)] flex-1 overflow-auto">{children}</div>
+        <div className="py-6 px-4 max-h-[calc(100dvh-45px)] lg:max-h-[calc(100dvh-90px)] flex-1 overflow-auto">{children}</div>
       </div>
     </div>
   );

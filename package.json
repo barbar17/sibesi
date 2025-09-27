@@ -9,10 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "formidable": "^3.5.4",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.15.0",
-    "next": "15.5.3",
     "@heroicons/react": "^2.2.0",
     "@tiptap/extension-bold": "^3.5.3",
     "@tiptap/extension-color": "^3.5.3",
@@ -28,23 +24,36 @@
     "@tiptap/extension-underline": "^3.5.3",
     "@tiptap/react": "^3.5.3",
     "@tiptap/starter-kit": "^3.5.3",
+    "axios": "^1.12.2",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.18",
+    "formidable": "^3.5.4",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.15.0",
+    "next": "15.5.3",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-responsive-modal": "^7.0.0",
+    "react-tiny-popover": "^8.1.6",
+    "react-toastify": "^11.0.5",
+    "zod": "^4.1.11",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/crypto-js": "^4.2.2",
     "@types/formidable": "^3.4.5",
     "typescript": "^5",
+    "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

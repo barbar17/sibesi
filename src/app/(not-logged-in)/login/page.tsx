@@ -1,25 +1,42 @@
 "use client";
 
-import LoadingStore from "@/store/loadingStore";
+import ApiRoute from "@/api/apiRoute";
 import InputCustom from "@/components/inputCustom";
+import LoadingStore from "@/store/loadingStore";
+import { getToken, saveToken } from "@/utils/cookie";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Login() {
-  const setLoading = LoadingStore((state) => state.setLoading);
+  const setLoading = LoadingStore((state: any) => state.setLoading);
   const router = useRouter();
   const [form, setForm] = useState<any>({ username: "", password: "" });
   const [showPass, setShowPass] = useState<boolean>(false);
 
   const onSubmit = () => {
     setLoading(true);
-    router.push("/dashboard");
+    ApiRoute.postLogin(form)
+      .then((res: any) => {
+        saveToken(res?.token);
+        router.push("/dashboard");
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
-    setLoading(false);
+    const isLogin: string = getToken(process.env.NEXT_PUBLIC_KEY_TOKEN!);
+    if (isLogin) {
+      router.push("/dashboard");
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   return (
