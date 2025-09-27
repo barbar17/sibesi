@@ -3,7 +3,7 @@ import { logger } from "@/lib/logger";
 import {z} from "zod";
 
 // GET User BY ID
-export async function GET(req: Request, {params}: {params: Promise<{id:string}>}) {
+export async function POST(req: Request, {params}: {params: Promise<{id:string}>}) {
     try {
         const {id} = await params;
 
