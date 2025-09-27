@@ -36,7 +36,7 @@ export default function AddPR({ handleChangeTab }: { handleChangeTab: (tab: numb
         <input type="date" value={form?.deadline} onChange={(evt) => setForm({ ...form, deadline: evt.target.value })} className="input-text" />
       </div>
       <div>
-        <RichTextEditor value={form?.konten} handleChange={(evt) => setForm({ ...form, konten: evt })} isClear={clearRTE} />
+        <RichTextEditor jenis="tugas" value={form?.konten} handleChange={(evt) => setForm({ ...form, konten: evt })} isClear={clearRTE} />
       </div>
     </div>
   );

@@ -19,10 +19,23 @@ export default function Dashboard() {
   const [data, setData] = useState<any[]>([]);
   const [formMapel, setFormMapel] = useState<any>({});
 
-  const onSubmitMapel = () => {};
+  const onSubmitMapel = () => {
+    let temp = { ...formMapel, user: isProfile?.nama_user };
+    setLoading(true);
+    ApiRoute.postMapel(temp)
+      .then((res) => {
+        toast.success("Mata pelajaran berhasil ditambahkan");
+        setShowModalMapel(false);
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    if (isProfile?.kelas_id) {
+    if (isProfile?.role) {
       setLoading(true);
       ApiRoute.getDashboard(isProfile?.role == "siswa" ? `/siswa?kelas=${isProfile?.kelas_id}` : `/guru?mapel=${isProfile?.mapel_id}`)
         .then((res: any) => {

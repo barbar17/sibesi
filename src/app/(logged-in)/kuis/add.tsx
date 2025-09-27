@@ -91,7 +91,7 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
 
       {soal?.map((item: any, index: number) => (
         <div key={index} className="flex lg:flex-row flex-col shadow-xl gap-6 border-gray-300 border p-4 justify-between relative">
-          <RichTextEditor value={item?.soal} handleChange={(evt) => handleSoal(evt, index, "soal")} />
+          <RichTextEditor jenis="kuis" value={item?.soal} handleChange={(evt) => handleSoal(evt, index, "soal")} />
           <div className="flex flex-col gap-3 w-[300px]">
             <div className="flex flex-row gap-4 items-center">
               <div className="whitespace-nowrap font-semibold">Tipe Soal</div>

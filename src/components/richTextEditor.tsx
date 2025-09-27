@@ -19,8 +19,19 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import LoadingStore from "@/store/loadingStore";
 import "@/style/rte.css";
+import ApiRoute from "@/api/apiRoute";
 
-export default function RichTextEditor({ value, handleChange, isClear }: { value: any; handleChange: (value: string) => void; isClear?: boolean }) {
+export default function RichTextEditor({
+  value,
+  handleChange,
+  isClear,
+  jenis,
+}: {
+  value: any;
+  handleChange: (value: string) => void;
+  isClear?: boolean;
+  jenis: string;
+}) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -57,26 +68,36 @@ export default function RichTextEditor({ value, handleChange, isClear }: { value
   const [image, setImage] = useState<string>("");
 
   const handleImage = async (e: any) => {
-    // const file = e.target.files?.[0];
-    // if (file) {
-    // setImage("");
-    // setLoading(true);
-    // let temp = await imageCompression(file, fileSize);
-    // const renamedFile = new File([temp], `${new Date().getTime()}.png`, {
-    //   type: temp.type,
-    // });
-    // MasterApi.postUploadFile({ file: renamedFile, bucketName: "core-dev", filePath: "cms-pajakmas" })
-    //   .then((res) => {
-    //     setLoading(false);
-    //     editor?.chain().focus().setImage({ src: res?.ossLink }).run();
-    //   })
-    //   .catch(() => {
-    //     setLoading(false);
-    //     toast.error("Upload Image Failed");
-    //   });
-    // const imageUrl = URL.createObjectURL(file);
-    // editor?.chain().focus().setImage({ src: imageUrl }).run();
-    // }
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage("");
+      // setLoading(true);
+
+      // console.log("coba", file);
+      // ApiRoute.postImage(jenis, file)
+      //   .then((res) => {
+      //     console.log("coba", res);
+      //     setLoading(false);
+      //   })
+      //   .catch((err) => {
+      //     toast.error(err);
+      //     setLoading(false);
+      //   });
+
+      const imageUrl = URL.createObjectURL(file);
+      editor?.chain().focus().setImage({ src: imageUrl }).run();
+      // MasterApi.postUploadFile({ file: renamedFile, bucketName: "core-dev", filePath: "cms-pajakmas" })
+      //   .then((res) => {
+      //     setLoading(false);
+      //     editor?.chain().focus().setImage({ src: res?.ossLink }).run();
+      //   })
+      //   .catch(() => {
+      //     setLoading(false);
+      //     toast.error("Upload Image Failed");
+      //   });
+      // const imageUrl = URL.createObjectURL(file);
+      // editor?.chain().focus().setImage({ src: imageUrl }).run();
+    }
   };
 
   const handleFile = (e: any) => {

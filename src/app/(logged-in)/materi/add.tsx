@@ -32,7 +32,7 @@ export default function AddMateri({ handleChangeTab }: { handleChangeTab: (tab: 
         </button>
       </div>
       <div>
-        <RichTextEditor value={form?.konten} handleChange={(evt) => setForm({ ...form, konten: evt })} isClear={clearRTE} />
+        <RichTextEditor jenis="materi" value={form?.konten} handleChange={(evt) => setForm({ ...form, konten: evt })} isClear={clearRTE} />
       </div>
     </div>
   );

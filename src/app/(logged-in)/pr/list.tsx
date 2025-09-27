@@ -3,9 +3,13 @@
 import LoadingStore from "@/store/loadingStore";
 import CollapseCustom from "@/components/collapseCustom";
 import { useEffect, useState } from "react";
+import ProfileStore from "@/store/profileStore";
+import ApiRoute from "@/api/apiRoute";
+import { toast } from "react-toastify";
 
 export default function ListPR({ handleChangeTab }: { handleChangeTab: (tab: number, id?: number) => void }) {
   const setLoading = LoadingStore((state) => state.setLoading);
+  const isProfile = ProfileStore((state) => state.profile);
 
   const [data, setData] = useState<any[]>([
     {
@@ -41,8 +45,19 @@ export default function ListPR({ handleChangeTab }: { handleChangeTab: (tab: num
   ]);
 
   useEffect(() => {
-    setLoading(false);
-  }, []);
+    if (isProfile?.role) {
+      setLoading(true);
+      ApiRoute.getTugas(`?kelas=${isProfile?.kelas_id}`)
+        .then((res) => {
+          console.log("coba", res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    }
+  }, [isProfile]);
 
   return (
     <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
