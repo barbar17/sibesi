@@ -12,7 +12,7 @@ export async function POST(req: Request, {params}: {params: Promise<{id:string}>
         const data: NilaiReq = await req.json();
 
         if(typeof data.nilai !== "number" || data.nilai < 0) {
-            return Response.json({success:false, error: "Nilai yang diinput tidak valid"})
+            return Response.json({success: false, error: "Nilai yang diinput tidak valid"}, {status: 400})
         }
 
         conn.beginTransaction()

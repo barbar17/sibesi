@@ -5,9 +5,18 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
     try {
         const {id} = await params;
 
-        const [rows] = await poolDB.query("SELECT quiz_soal_id, soal, tipe, kunci_jawaban, pilihan_1, pilihan_2, pilihan_3, pilihan_4 FROM quiz_soal WHERE quiz_id = ?", [id]);
+        const [rowsSoal] = await poolDB.query("SELECT quiz_soal_id, soal, tipe, kunci_jawaban, pilihan_1, pilihan_2, pilihan_3, pilihan_4 FROM quiz_soal WHERE quiz_id = ?", [id]);
 
-        return Response.json({success: true, data: rows})
+        const [rows]: any = await poolDB.query("SELECT nama_quiz, time_quiz FROM quiz WHERE quiz_id = ?", [id])
+        const dataQuiz = rows[0]
+        const namaQuiz = dataQuiz.nama_quiz
+        const timeQuiz = dataQuiz.time_quiz
+
+        return Response.json({success: true, data: {
+            nama: namaQuiz,
+            time: timeQuiz,
+            kuis: rowsSoal
+        }})
     } catch (err) {
         return Response.json({success: false, error: err})
     }
