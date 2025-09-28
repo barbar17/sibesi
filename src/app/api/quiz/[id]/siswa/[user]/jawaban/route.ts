@@ -27,13 +27,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         const { id, user } = await params;
         const data: JawabanSiswaReq[] = await req.json()
 
-        const stmt = await conn.prepare("INSERT INTO quiz_siswa_detail (quiz_siswa_id, quiz_soal_id, jawaban, nilai) VALUES (?,?,?,0)")
+        const stmt = await conn.prepare("INSERT INTO quiz_siswa_detail (quiz_siswa_id, quiz_soal_id, jawaban, nilai) VALUES (?,?,?,0) WHERE quiz_siswa_id = ? AND quiz_soal_id = ?")
 
         await conn.beginTransaction()
 
         for (const item of data) {
             try {
-                const [res] = await stmt.execute([item.quiz_siswa_id, item.quiz_soal_id, item.jawaban])
+                const [res] = await stmt.execute([item.quiz_siswa_id, item.quiz_soal_id, item.jawaban, user, id])
             } catch (err) {
                 throw new Error(`Gagal upload jawaban, ${err}`)
             }
