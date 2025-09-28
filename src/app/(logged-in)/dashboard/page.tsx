@@ -248,18 +248,19 @@ export default function Dashboard() {
         </div>
       </ModalCustom>
 
-      <div className="bg-white rounded-lg w-full p-6 grid lg:grid-cols-4 grid-cols-1 gap-6 overflow-auto">
+      <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 grid lg:grid-cols-4 grid-cols-1 gap-6 overflow-auto">
         {data?.map((item: any, index: number) => (
           <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6 h-fit" key={index}>
             <div className="flex flex-col gap-1">
               <div className="text-2xl font-semibold">{item?.nama_mapel}</div>
-              <div className="text-lg">{item?.nama_materi}</div>
+              <div className="text-md">{item?.nama_materi}</div>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="font-semibold">{item?.nama_guru || item?.nama_kelas}</div>
+              
               <div className="flex flex-col">
-                <div>
-                  {item?.materi_selesai}/{item?.total_materi} modul
+                <div className="w-full flex flex-row item-center pb-1 justify-between">
+                  <div className="font-semibold">{item?.nama_guru || item?.nama_kelas}</div>
+                  <div>Modul {item?.materi_selesai}/{item?.total_materi}</div>
                 </div>
                 <div className="flex relative w-full bg-gray-300 rounded-sm h-4">
                   <div

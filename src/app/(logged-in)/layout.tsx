@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftEndOnRectangleIcon, Bars3Icon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftEndOnRectangleIcon, Bars3Icon, ChevronDownIcon, BookOpenIcon, DocumentIcon, HomeIcon, DocumentCheckIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -50,14 +50,14 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
 
   return (
     <div className="flex flex-col bg-gray-300 h-[100dvh] w-[100vw]">
-      <div className="flex justify-between w-full bg-white py-3 px-4 lg:h-[90px] h-[45px] items-center shadow-xl border-b border-gray-300">
+      <div className="flex justify-between w-full bg-slate-200 py-3 px-4 lg:h-[60px] h-[35px] items-center shadow-xl border-b border-gray-300">
         <div className="flex gap-4 items-center">
           <Image
             src={"/logo_landscape.png"}
             alt="logo"
             width={100}
             height={100}
-            className="w-[100px] lg:w-[200px] h-fit cursor-pointer"
+            className="w-[60px] lg:w-[120px] h-fit cursor-pointer"
             onClick={() => {
               if (pathname !== "/dashboard") {
                 setLoading(true);
@@ -77,13 +77,13 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             <div className="flex flex-col gap-3 p-4 bg-white rounded-lg shadow-2xl border border-gray-300 me-4">
               <div className="flex flex-col gap-1">
                 {dataProfile?.map((item: any, index: number) => (
-                  <div className="flex items-center">
-                    <div className="w-[100px]">{item?.label}:</div>
-                    <div>{item?.value}</div>
+                  <div className="flex gap-4 items-center">
+                    <div className="w-[100px] font-bold">{item?.label}</div>
+                    <div>: {item?.value}</div>
                   </div>
                 ))}
               </div>
-              <div className="border-gray-300 border-t h-[1px]" />
+              <div className="border-gray-300 border h-[1px]" />
               <button
                 className="button-secondary"
                 onClick={() => {
@@ -93,13 +93,13 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                 }}
               >
                 <ArrowLeftEndOnRectangleIcon className="w-4 h-4 text-gray-800" />
-                Logout
+                <span className="font-bold">Logout</span>
               </button>
             </div>
           }
         >
           <div className="flex gap-3 cursor-pointer items-center" onClick={() => setShowProfile(!showProfile)}>
-            <div className="lg:text-lg">{profileNow?.nama_user}</div>
+            <div className="lg:text-lg font-bold">{profileNow?.nama_user}</div>
             <ChevronDownIcon className="text-gray-800 w-4 h-4" />
           </div>
         </Popover>
@@ -107,12 +107,11 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
 
       <div className="flex relative">
         <div
-          className={`w-full lg:w-[250px] lg:flex flex-col gap-3 bg-white h-[calc(100dvh-45px)] lg:h-[calc(100dvh-90px)] py-5 px-4 text-lg lg:sticky absolute z-10 ${
-            showMenu ? "flex" : "hidden"
-          }`}
+          className={`w-full lg:w-[220px] lg:flex flex-col bg-white h-[calc(100dvh-45px)] lg:h-[calc(100dvh-90px)] py-5 text-lg lg:sticky absolute z-10 ${showMenu ? "flex" : "hidden"
+            }`}
         >
           <div
-            className={`w-full cursor-pointer ${pathname === "/materi" && "font-semibold"}`}
+            className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/materi" && "font-semibold"}`}
             onClick={() => {
               if (pathname !== "/materi") {
                 setLoading(true);
@@ -121,17 +120,21 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
               }
             }}
           >
-            Materi
+            <div className="flex justify-start items-center gap-2">
+              <BookOpenIcon className="w-4 h-4 text-gray-800" /> Materi
+            </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-center w-full cursor-pointer" onClick={() => setShowTugas(!showTugas)}>
-              <div>Tugas</div>
+          <div className="flex flex-col">
+            <div className="flex justify-between hover:bg-slate-200 py-2 px-4 text-md font-bold items-center w-full cursor-pointer" onClick={() => setShowTugas(!showTugas)}>
+              <div className="flex justify-start items-center gap-2">
+                <DocumentIcon className="w-4 h-4 text-gray-800" /> Tugas
+              </div>
               <ChevronDownIcon className="w-4 h-4 text-gray-800" />
             </div>
             {showTugas && (
-              <div className="flex flex-col gap-1 px-4">
+              <div className="flex flex-col">
                 <div
-                  className={`w-full cursor-pointer ${pathname === "/pr" && "font-semibold"}`}
+                  className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-8 ${pathname === "/pr" && "font-semibold"}`}
                   onClick={() => {
                     if (pathname !== "/pr") {
                       setLoading(true);
@@ -140,10 +143,12 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                     }
                   }}
                 >
-                  Pekerjaan Rumah
+                  <div className="flex justify-start items-center gap-2">
+                    <HomeIcon className="w-4 h-4 text-gray-800" /> PR
+                  </div>
                 </div>
                 <div
-                  className={`w-full cursor-pointer ${pathname === "/kuis" && "font-semibold"}`}
+                  className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-8 ${pathname === "/kuis" && "font-semibold"}`}
                   onClick={() => {
                     if (pathname !== "/kuis") {
                       setLoading(true);
@@ -152,7 +157,9 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                     }
                   }}
                 >
-                  Kuis
+                  <div className="flex justify-start items-center gap-2">
+                    <DocumentCheckIcon className="w-4 h-4 text-gray-800" /> Kuis
+                  </div>
                 </div>
               </div>
             )}
