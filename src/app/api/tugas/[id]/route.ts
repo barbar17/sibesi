@@ -5,7 +5,7 @@ export async function GET(req: Request, {params}: {params: Promise<{id:string}>}
     try {
         const {id} = await params;
 
-        const [row]: any = await poolDB.query("SELECT mapel_id, comment_id, nama, isi, file_url, deadline FROM tugas WHERE tugas_id = ?", [id]);
+        const [row]: any = await poolDB.query("SELECT mapel_id, comment_id, nama, isi, deadline FROM tugas WHERE tugas_id = ?", [id]);
 
         const tugas = row[0];
 
@@ -15,9 +15,7 @@ export async function GET(req: Request, {params}: {params: Promise<{id:string}>}
             mapel_id: tugas.mapel_id,
             nama: tugas.nama,
             isi: tugas.isi,
-            file_url: tugas.file_url,
             deadline: tugas.deadline,
-            comments_id: tugas.comment_id,
             comments: comments,
         }})
     } catch (err: any) {
