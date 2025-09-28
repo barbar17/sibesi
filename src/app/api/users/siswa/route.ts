@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
         let userRes;
         try {
-            const [res] = await conn.execute("INSERT INTO user (user_id, kelas_id, kelas_id, username, password, role, nama_user) VALUES (?,?,?,?,?,?,?)",
+            const [res] = await conn.execute("INSERT INTO user (user_id, kelas_id, mapel_id, username, password, role, nama_user) VALUES (?,?,?,?,?,?,?)",
                 [data.user_id, data.kelas_id, "-",  data.username, data.password, "guru", data.nama_user]
             )
             userRes = res
