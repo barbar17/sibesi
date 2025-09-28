@@ -50,6 +50,7 @@ export default function ListMateri({ handleChangeTab }: { handleChangeTab: (tab:
       ApiRoute.getMateri(`?kelas=${isProfile?.kelas_id}`)
         .then((res) => {
           console.log("coba", res);
+          setData(res);
           setLoading(false);
         })
         .catch((err) => {
