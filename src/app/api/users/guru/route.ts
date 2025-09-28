@@ -30,6 +30,8 @@ export async function POST(req: Request) {
             throw new Error(`Gagal menambah guru, ${err}`)
         }
         
+        await conn.commit()
+        return Response.json({success: true})
     } catch (err: any) {
         await conn.rollback()
 
