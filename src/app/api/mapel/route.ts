@@ -44,6 +44,16 @@ export async function POST(req: Request) {
             throw new Error(`Gagal menambahkan mapel, ${err}`)
         }
 
+        let insertKelasMapelRes;
+        try {
+            const [res] = await conn.execute("INSERT INTO kelas_mapel (kelas_id, mapel_id) VALUES (?, ?)", 
+                [dataMapel.kelas_id, mapelID]);
+            
+            insertKelasMapelRes = res
+        } catch (err: any) {
+            throw new Error(`Gagal menambahkan mapel, ${err}`)
+        }
+
         conn.commit()
         return Response.json({success: true, insertMapelRes})
     } catch (err: any) {
