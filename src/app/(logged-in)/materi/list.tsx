@@ -11,43 +11,12 @@ export default function ListMateri({ handleChangeTab }: { handleChangeTab: (tab:
   const setLoading = LoadingStore((state) => state.setLoading);
   const isProfile = ProfileStore((state) => state.profile);
 
-  const [data, setData] = useState<any[]>([
-    {
-      id: 1,
-      nama: "Matematika",
-      modul: [
-        { nama: "modul1", id: 1 },
-        { nama: "modul2", id: 2 },
-        { nama: "modul3", id: 3 },
-        { nama: "modul4", id: 4 },
-      ],
-    },
-    {
-      id: 2,
-      nama: "Matematika",
-      modul: [
-        { nama: "modul1", id: 1 },
-        { nama: "modul2", id: 2 },
-        { nama: "modul3", id: 3 },
-        { nama: "modul4", id: 4 },
-      ],
-    },
-    {
-      id: 3,
-      nama: "Matematika",
-      modul: [
-        { nama: "modul1", id: 1 },
-        { nama: "modul2", id: 2 },
-        { nama: "modul3", id: 3 },
-        { nama: "modul4", id: 4 },
-      ],
-    },
-  ]);
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     if (isProfile?.role) {
       setLoading(true);
-      ApiRoute.getMateri(`?kelas=${isProfile?.kelas_id}`)
+      ApiRoute.getMateri(isProfile?.role === "siswa" ? `?kelas=${isProfile?.kelas_id}` : `/guru?mapel=${isProfile?.mapel_id}`)
         .then((res) => {
           setData(res);
           setLoading(false);
@@ -61,7 +30,14 @@ export default function ListMateri({ handleChangeTab }: { handleChangeTab: (tab:
 
   return (
     <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
-      <CollapseCustom data={data} namaId="id" namaKonten="modul" namaIdDetail="id" onDetail={(id) => handleChangeTab(2, id)} onAdd={() => handleChangeTab(3)} />
+      <CollapseCustom
+        data={data}
+        namaId="id"
+        namaKonten="modul"
+        namaIdDetail="id"
+        onDetail={(id) => handleChangeTab(2, id)}
+        onAdd={(id) => handleChangeTab(3, id)}
+      />
     </div>
   );
 }

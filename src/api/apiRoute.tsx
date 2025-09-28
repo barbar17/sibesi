@@ -16,6 +16,9 @@ const ApiRoute = {
   getMapel: (params: string = "") => {
     return Api().get(`/mapel${params}`);
   },
+  getKuis: (params: string = "") => {
+    return Api().get(`/quiz${params}`);
+  },
 
   postLogin: (data: any) => {
     return Api().post(`/login`, data);
@@ -31,6 +34,21 @@ const ApiRoute = {
   },
   postUser: (params: string = "", data: any) => {
     return Api().post(`/users/${params}`, data);
+  },
+  postKomen: (data: any) => {
+    return Api().post(`/comments`, data);
+  },
+  postMateri: (data: any) => {
+    return Api().post(`/materi`, data);
+  },
+  postTugas: (data: any, params: string = "") => {
+    return Api().post(`/tugas${params}`, data);
+  },
+  postKuis: (data: any, params: string = "") => {
+    return Api().post(`/quiz${params}`, data);
+  },
+  postFileTugas: (data: any) => {
+    return Api().post(`/tugas/file`, data, { multipartForm: true });
   },
 
   getProfile: (data: any) => {

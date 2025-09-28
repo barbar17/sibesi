@@ -73,28 +73,15 @@ export default function RichTextEditor({
       setImage("");
       setLoading(true);
 
-      ApiRoute.postImage(jenis, file)
+      ApiRoute.postImage(jenis, { file: file })
         .then((res) => {
+          editor?.chain().focus().setImage({ src: res?.url }).run();
           setLoading(false);
         })
         .catch((err) => {
           toast.error(err);
           setLoading(false);
         });
-
-      const imageUrl = URL.createObjectURL(file);
-      editor?.chain().focus().setImage({ src: imageUrl }).run();
-      // MasterApi.postUploadFile({ file: renamedFile, bucketName: "core-dev", filePath: "cms-pajakmas" })
-      //   .then((res) => {
-      //     setLoading(false);
-      //     editor?.chain().focus().setImage({ src: res?.ossLink }).run();
-      //   })
-      //   .catch(() => {
-      //     setLoading(false);
-      //     toast.error("Upload Image Failed");
-      //   });
-      // const imageUrl = URL.createObjectURL(file);
-      // editor?.chain().focus().setImage({ src: imageUrl }).run();
     }
   };
 

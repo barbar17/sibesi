@@ -96,7 +96,7 @@ export async function POST(req: Request) {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     if (rowDate <= today) {
-      return Response.json({ success: false, error: "Tanggal deadline tidak boleh kurang atau sama dengan hari ini" });
+      return Response.json({ success: false, error: "Tanggal deadline tidak boleh kurang atau sama dengan hari ini" }, { status: 400 });
     }
 
     const [rows]: any = await conn.query("SELECT comment_id FROM comment ORDER BY comment_id DESC LIMIT 1 FOR UPDATE");
@@ -134,7 +134,7 @@ export async function POST(req: Request) {
     if (err instanceof z.ZodError) {
       return Response.json({ success: false, error: err.issues }, { status: 400 });
     }
-    return Response.json({ success: false, error: err.message });
+    return Response.json({ success: false, error: err.message }, { status: 400 });
   } finally {
     conn.release();
   }

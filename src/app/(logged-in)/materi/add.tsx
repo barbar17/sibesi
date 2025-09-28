@@ -1,18 +1,29 @@
 "use client";
 
+import ApiRoute from "@/api/apiRoute";
 import InputCustom from "@/components/inputCustom";
 import RichTextEditor from "@/components/richTextEditor";
+import LoadingStore from "@/store/loadingStore";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function AddMateri({ handleChangeTab }: { handleChangeTab: (tab: number) => void }) {
+export default function AddMateri({ handleChangeTab, id }: { handleChangeTab: (tab: number) => void; id: number }) {
+  const setLoading = LoadingStore((state) => state.setLoading);
   const [form, setForm] = useState<any>({});
   const [clearRTE, setClearRTE] = useState<boolean>(false);
 
   const onSubmit = () => {
-    toast.success("Modul berhasil ditambahkan");
-    handleChangeTab(1);
+    let temp = { ...form, mapel_id: id };
+    ApiRoute.postMateri(temp)
+      .then((res) => {
+        toast.success("Modul berhasil ditambahkan");
+        handleChangeTab(1);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -26,13 +37,13 @@ export default function AddMateri({ handleChangeTab }: { handleChangeTab: (tab: 
         <div className="lg:text-4xl text-xl">Tambah Materi</div>
       </div>
       <div className="flex gap-3">
-        <InputCustom value={form?.judul} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, judul: evt })} className="flex-1" />
-        <button className="button-primary" disabled={!form?.konten || !form?.judul} onClick={onSubmit}>
+        <InputCustom value={form?.nama} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, nama: evt })} className="flex-1" />
+        <button className="button-primary" disabled={!form?.isi || !form?.nama} onClick={onSubmit}>
           Simpan
         </button>
       </div>
       <div>
-        <RichTextEditor jenis="materi" value={form?.konten} handleChange={(evt) => setForm({ ...form, konten: evt })} isClear={clearRTE} />
+        <RichTextEditor jenis="materi" value={form?.isi} handleChange={(evt) => setForm({ ...form, isi: evt })} isClear={clearRTE} />
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export default function Kuis() {
   } else if (selectedTab === 2) {
     return <DetailKuis id={id} handleChangeTab={handleChangeTab} />;
   } else if (selectedTab === 3) {
-    return <AddKuis handleChangeTab={handleChangeTab} />;
+    return <AddKuis handleChangeTab={handleChangeTab} id={id} />;
   } else {
     return <ListDoneKuis handleChangeTab={handleChangeTab} id={id} />;
   }

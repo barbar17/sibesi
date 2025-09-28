@@ -1,6 +1,15 @@
 "use client";
 
-import { ArrowLeftEndOnRectangleIcon, Bars3Icon, ChevronDownIcon, BookOpenIcon, DocumentIcon, HomeIcon, DocumentCheckIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftEndOnRectangleIcon,
+  Bars3Icon,
+  ChevronDownIcon,
+  BookOpenIcon,
+  DocumentIcon,
+  HomeIcon,
+  DocumentCheckIcon,
+  ComputerDesktopIcon,
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -107,8 +116,9 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
 
       <div className="flex relative">
         <div
-          className={`w-full lg:w-[220px] lg:flex flex-col bg-white h-[calc(100dvh-45px)] lg:h-[calc(100dvh-90px)] py-5 text-lg lg:sticky absolute z-10 ${showMenu ? "flex" : "hidden"
-            }`}
+          className={`w-full lg:w-[220px] lg:flex flex-col bg-white h-[calc(100dvh-45px)] lg:h-[calc(100dvh-60px)] py-5 text-lg lg:sticky absolute z-10 ${
+            showMenu ? "flex" : "hidden"
+          }`}
         >
           <div
             className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/dashboard" && "font-semibold"}`}
@@ -139,7 +149,10 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             </div>
           </div>
           <div className="flex flex-col">
-            <div className="flex justify-between hover:bg-slate-200 py-2 px-4 text-md font-bold items-center w-full cursor-pointer" onClick={() => setShowTugas(!showTugas)}>
+            <div
+              className="flex justify-between hover:bg-slate-200 py-2 px-4 text-md font-bold items-center w-full cursor-pointer"
+              onClick={() => setShowTugas(!showTugas)}
+            >
               <div className="flex justify-start items-center gap-2">
                 <DocumentIcon className="w-4 h-4 text-gray-800" /> Tugas
               </div>
@@ -179,7 +192,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             )}
           </div>
         </div>
-        <div className="py-6 px-4 max-h-[calc(100dvh-45px)] lg:max-h-[calc(100dvh-90px)] flex-1 overflow-auto">{children}</div>
+        <div className="py-6 px-4 max-h-[calc(100dvh-45px)] lg:max-h-[calc(100dvh-60px)] flex-1 overflow-auto">{children}</div>
       </div>
     </div>
   );

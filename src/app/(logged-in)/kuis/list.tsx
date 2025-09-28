@@ -3,50 +3,41 @@
 import LoadingStore from "@/store/loadingStore";
 import CollapseCustom from "@/components/collapseCustom";
 import { useEffect, useState } from "react";
+import ProfileStore from "@/store/profileStore";
+import ApiRoute from "@/api/apiRoute";
+import { toast } from "react-toastify";
 
 export default function ListKuis({ handleChangeTab }: { handleChangeTab: (tab: number, id?: number) => void }) {
   const setLoading = LoadingStore((state) => state.setLoading);
+  const isProfile = ProfileStore((state) => state.profile);
 
-  const [data, setData] = useState<any[]>([
-    {
-      id: 1,
-      nama: "Matematika",
-      kuis: [
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-      ],
-    },
-    {
-      id: 2,
-      nama: "Matematika",
-      kuis: [
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-      ],
-    },
-    {
-      id: 3,
-      nama: "Matematika",
-      kuis: [
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-        { nama: "kuis1", id: 1 },
-      ],
-    },
-  ]);
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    setLoading(false);
-  }, []);
+    if (isProfile?.role) {
+      setLoading(true);
+      ApiRoute.getKuis(isProfile?.role === "siswa" ? `?kelas=${isProfile?.kelas_id}` : `/guru?mapel=${isProfile?.mapel_id}`)
+        .then((res) => {
+          setData(res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    }
+  }, [isProfile]);
 
   return (
     <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
-      <CollapseCustom data={data} namaId="id" namaKonten="kuis" namaIdDetail="id" onDetail={(id) => handleChangeTab(2, id)} onAdd={() => handleChangeTab(3)} />
+      <CollapseCustom
+        data={data}
+        namaId="id"
+        namaKonten="quiz"
+        namaIdDetail="id"
+        onDetail={(id) => handleChangeTab(2, id)}
+        onAdd={(id) => handleChangeTab(3, id)}
+      />
     </div>
   );
 }

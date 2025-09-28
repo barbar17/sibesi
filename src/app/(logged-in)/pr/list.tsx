@@ -11,44 +11,14 @@ export default function ListPR({ handleChangeTab }: { handleChangeTab: (tab: num
   const setLoading = LoadingStore((state) => state.setLoading);
   const isProfile = ProfileStore((state) => state.profile);
 
-  const [data, setData] = useState<any[]>([
-    {
-      id: 1,
-      nama: "Matematika",
-      tugas: [
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-      ],
-    },
-    {
-      id: 2,
-      nama: "Matematika",
-      tugas: [
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-      ],
-    },
-    {
-      id: 3,
-      nama: "Matematika",
-      tugas: [
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-        { nama: "Tugas1", id: 1 },
-      ],
-    },
-  ]);
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     if (isProfile?.role) {
       setLoading(true);
-      ApiRoute.getTugas(`?kelas=${isProfile?.kelas_id}`)
+      ApiRoute.getTugas(isProfile?.role === "siswa" ? `?kelas=${isProfile?.kelas_id}` : `/guru?mapel=${isProfile?.mapel_id}`)
         .then((res) => {
+          setData(res);
           setLoading(false);
         })
         .catch((err) => {
@@ -60,7 +30,14 @@ export default function ListPR({ handleChangeTab }: { handleChangeTab: (tab: num
 
   return (
     <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
-      <CollapseCustom data={data} namaId="id" namaKonten="tugas" namaIdDetail="id" onDetail={(id) => handleChangeTab(2, id)} onAdd={() => handleChangeTab(3)} />
+      <CollapseCustom
+        data={data}
+        namaId="id"
+        namaKonten="tugas"
+        namaIdDetail="id"
+        onDetail={(id) => handleChangeTab(2, id)}
+        onAdd={(id) => handleChangeTab(3, id)}
+      />
     </div>
   );
 }

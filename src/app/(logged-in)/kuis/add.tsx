@@ -7,9 +7,14 @@ import { ArrowLeftIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Dropdown from "@/components/Dropdown";
+import dayjs from "dayjs";
+import LoadingStore from "@/store/loadingStore";
+import ApiRoute from "@/api/apiRoute";
 
-export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: number) => void }) {
+export default function AddKuis({ handleChangeTab, id }: { handleChangeTab: (tab: number) => void; id: number }) {
+  const setLoading = LoadingStore((state) => state.setLoading);
   const [form, setForm] = useState<any>({});
+  const [time, setTime] = useState<any>({});
   const [soal, setSoal] = useState<any[]>([{}]);
   const pilihanGanda = [
     { label: "A", value: "A" },
@@ -18,8 +23,8 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
     { label: "D", value: "D" },
   ];
   const option = [
-    { label: "Pilihan Ganda", value: 1 },
-    { label: "Essay", value: 2 },
+    { label: "Pilihan Ganda", value: "pg" },
+    { label: "Essay", value: "essay" },
   ];
 
   const handleSoal = (evt: any, index: number, tipe: string) => {
@@ -36,7 +41,7 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
   const handleTime = (value: string, tipe: string, max: number) => {
     let valueNumber = parseFloat(value);
     if (value === "" || (valueNumber >= 0 && valueNumber <= max)) {
-      setForm({ ...form, [tipe]: valueNumber });
+      setTime({ ...time, [tipe]: valueNumber });
     }
   };
 
@@ -47,8 +52,31 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
   };
 
   const onSubmit = () => {
-    toast.success("Kuis berhasil ditambahkan");
-    handleChangeTab(1);
+    let tempSoal = [...soal];
+    tempSoal.forEach((item, index) => {
+      (item.tipe = item.tipe.value), (item.kunci_jawaban = item?.kunci_jawaban?.value || "");
+    });
+
+    let temp = {
+      info: {
+        mapel_id: id,
+        nama_quiz: form?.nama_quiz,
+        time: time?.menit * 60 + time?.detik,
+        deadline_quiz: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      },
+      soal: tempSoal,
+    };
+
+    setLoading(true);
+    ApiRoute.postKuis(temp)
+      .then((res) => {
+        toast.success("Kuis berhasil ditambahkan");
+        handleChangeTab(1);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
   };
 
   return (
@@ -58,8 +86,8 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
         <div className="lg:text-4xl text-xl">Tambah Kuis</div>
       </div>
       <div className="flex gap-3">
-        <InputCustom value={form?.judul} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, judul: evt })} className="flex-1" />
-        <button className="button-primary" disabled={!form?.judul || !form?.menit || !form?.detik} onClick={onSubmit}>
+        <InputCustom value={form?.nama_quiz} placeholder="Masukkan Nama Kuis" onChange={(evt) => setForm({ ...form, nama_quiz: evt })} className="flex-1" />
+        <button className="button-primary" onClick={onSubmit}>
           Simpan
         </button>
       </div>
@@ -99,23 +127,28 @@ export default function AddKuis({ handleChangeTab }: { handleChangeTab: (tab: nu
                 <Dropdown placeholder="Tipe" options={option} value={item?.tipe} handleOnChange={(evt) => handleSoal(evt, index, "tipe")} width="100%" />
               </div>
             </div>
-            {item.tipe?.value === 1 && (
+            {item.tipe?.value === "pg" && (
               <div className="flex flex-col gap-1">
                 <div className="flex gap-1 items-center">
-                  A <input className="input-text" />
+                  A <InputCustom placeholder="Pilihan A" value={item?.pilihan_1} onChange={(evt) => handleSoal(evt, index, "pilihan_1")} />
                 </div>
                 <div className="flex gap-1 items-center">
-                  B <input className="input-text" />
+                  B <InputCustom placeholder="Pilihan B" value={item?.pilihan_2} onChange={(evt) => handleSoal(evt, index, "pilihan_2")} />
                 </div>
                 <div className="flex gap-1 items-center">
-                  C <input className="input-text" />
+                  C <InputCustom placeholder="Pilihan C" value={item?.pilihan_3} onChange={(evt) => handleSoal(evt, index, "pilihan_3")} />
                 </div>
                 <div className="flex gap-1 items-center">
-                  D <input className="input-text" />
+                  D <InputCustom placeholder="Pilihan D" value={item?.pilihan_4} onChange={(evt) => handleSoal(evt, index, "pilihan_4")} />
                 </div>
                 <div className="flex gap-1 items-center mt-2">
                   <span className="font-semibold">Jawaban</span>
-                  <Dropdown placeholder="Jawaban" options={pilihanGanda} value={item?.jawaban} handleOnChange={(evt) => handleSoal(evt, index, "jawaban")} />
+                  <Dropdown
+                    placeholder="Jawaban"
+                    options={pilihanGanda}
+                    value={item?.kunci_jawaban}
+                    handleOnChange={(evt) => handleSoal(evt, index, "kunci_jawaban")}
+                  />
                 </div>
               </div>
             )}

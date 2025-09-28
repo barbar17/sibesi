@@ -1,31 +1,19 @@
 "use client";
 
+import ApiRoute from "@/api/apiRoute";
 import InputCustom from "@/components/inputCustom";
 import ModalCustom from "@/components/modalCustom";
 import TableCustom from "@/components/tableCustom";
+import LoadingStore from "@/store/loadingStore";
 import { ArrowDownTrayIcon, ArrowLeftIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function ListDoneKuis({ handleChangeTab, id }: { handleChangeTab: (tab: number) => void; id: number }) {
+  const setLoading = LoadingStore((state) => state.setLoading);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [form, setForm] = useState<any>({});
-  const [data, setData] = useState<any>({
-    nama: "Tugas 1",
-    data: [
-      { nama: "Siswa 1", id: 1 },
-      { nama: "Siswa 1", id: 1 },
-      { nama: "Siswa 1", id: 1, nilai: 80 },
-      { nama: "Siswa 1", id: 1 },
-      { nama: "Siswa 1", id: 1 },
-      { nama: "Siswa 1", id: 1 },
-      { nama: "Siswa 1", id: 1 },
-    ],
-    page: 1,
-    page_size: 10,
-    total: 20,
-    total_page: 2,
-  });
+  const [data, setData] = useState<any>();
 
   const column = [
     { title: "Nama", cell: "nama" },
@@ -50,9 +38,26 @@ export default function ListDoneKuis({ handleChangeTab, id }: { handleChangeTab:
     toast.success("Nilai berhasil ditambahkan");
   };
 
+  const fetchData = () => {
+    setLoading(true);
+    Promise.all([ApiRoute.getKuis(`/${id}/terkumpul`), ApiRoute.getKuis(`/${id}`)])
+      .then((res) => {
+        setData({ ...res[1], data: res[0] });
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     setForm({});
   }, [showModal]);
+
+  useEffect(() => {
+    fetchData();
+  }, [id]);
 
   return (
     <>
@@ -61,7 +66,7 @@ export default function ListDoneKuis({ handleChangeTab, id }: { handleChangeTab:
           <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
           <div className="text-4xl">{data?.nama}</div>
         </div>
-        <TableCustom columns={column} data={data?.data} page={data?.page} page_size={data?.page_size} total={data?.total} total_page={data?.total_page} />
+        <TableCustom columns={column} data={data?.data} />
       </div>
     </>
   );

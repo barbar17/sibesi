@@ -1,18 +1,33 @@
 "use client";
 
+import ApiRoute from "@/api/apiRoute";
 import InputCustom from "@/components/inputCustom";
 import RichTextEditor from "@/components/richTextEditor";
+import LoadingStore from "@/store/loadingStore";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function AddPR({ handleChangeTab }: { handleChangeTab: (tab: number) => void }) {
+export default function AddPR({ handleChangeTab, id }: { handleChangeTab: (tab: number) => void; id: number }) {
+  const setLoading = LoadingStore((state) => state.setLoading);
   const [form, setForm] = useState<any>({});
   const [clearRTE, setClearRTE] = useState<boolean>(false);
 
   const onSubmit = () => {
-    toast.success("Pekerjaan rumah berhasil ditambahkan");
-    handleChangeTab(1);
+    let temp = { ...form, mapel_id: id, deadline: dayjs(form?.deadline).format("YYYY-MM-DD HH:mm:00") };
+
+    setLoading(true);
+    ApiRoute.postTugas(temp)
+      .then((res) => {
+        toast.success("Pekerjaan rumah berhasil ditambahkan");
+        handleChangeTab(1);
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -26,17 +41,17 @@ export default function AddPR({ handleChangeTab }: { handleChangeTab: (tab: numb
         <div className="lg:text-4xl text-xl">Tambah Tugas</div>
       </div>
       <div className="flex gap-3">
-        <InputCustom value={form?.judul} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, judul: evt })} className="flex-1" />
-        <button className="button-primary" disabled={!form?.konten || !form?.judul || !form?.deadline} onClick={onSubmit}>
+        <InputCustom value={form?.nama} placeholder="Masukkan judul modul" onChange={(evt) => setForm({ ...form, nama: evt })} className="flex-1" />
+        <button className="button-primary" disabled={!form?.isi || !form?.nama || !form?.deadline} onClick={onSubmit}>
           Simpan
         </button>
       </div>
       <div className="flex gap-2 items-center">
         <div className="text-[16px]">Tenggat waktu:</div>
-        <input type="date" value={form?.deadline} onChange={(evt) => setForm({ ...form, deadline: evt.target.value })} className="input-text" />
+        <input type="datetime-local" value={form?.deadline} onChange={(evt) => setForm({ ...form, deadline: evt.target.value })} className="input-text" />
       </div>
       <div>
-        <RichTextEditor jenis="tugas" value={form?.konten} handleChange={(evt) => setForm({ ...form, konten: evt })} isClear={clearRTE} />
+        <RichTextEditor jenis="tugas" value={form?.isi} handleChange={(evt) => setForm({ ...form, isi: evt })} isClear={clearRTE} />
       </div>
     </div>
   );

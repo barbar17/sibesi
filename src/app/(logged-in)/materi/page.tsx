@@ -19,6 +19,6 @@ export default function Materi() {
   } else if (selectedTab === 2) {
     return <DetailMateri id={id} handleChangeTab={handleChangeTab} />;
   } else {
-    return <AddMateri handleChangeTab={handleChangeTab} />;
+    return <AddMateri handleChangeTab={handleChangeTab} id={id} />;
   }
 }
