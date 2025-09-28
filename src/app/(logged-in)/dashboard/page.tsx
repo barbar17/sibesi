@@ -1,10 +1,13 @@
 "use client";
 
 import ApiRoute from "@/api/apiRoute";
+import Dropdown from "@/components/Dropdown";
 import InputCustom from "@/components/inputCustom";
 import ModalCustom from "@/components/modalCustom";
 import LoadingStore from "@/store/loadingStore";
 import ProfileStore from "@/store/profileStore";
+import { OptionInterface } from "@/types/optionInterface";
+import Formatting from "@/utils/formatting";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
@@ -15,17 +18,66 @@ export default function Dashboard() {
   const isProfile = ProfileStore((state) => state.profile);
   const [showPopover, setShowPopover] = useState<boolean>(false);
   const [showModalMapel, setShowModalMapel] = useState<boolean>(false);
+  const [isNewMapel, setIsNewMapel] = useState<boolean>(true);
+  const [optionKelas, setOptionKelas] = useState<OptionInterface[]>([]);
+  const [optionMapel, setOptionMapel] = useState<OptionInterface[]>([]);
   const [showModalUser, setShowModalUser] = useState<boolean>(false);
   const [data, setData] = useState<any[]>([]);
   const [formMapel, setFormMapel] = useState<any>({});
+  const [formUser, setFormUser] = useState<any>({});
+  const [selectedRole, setSelectedRole] = useState<OptionInterface | null>({ label: "Guru", value: 1 });
+
+  const optionRole = [
+    { label: "Guru", value: 1 },
+    { label: "Siswa", value: 2 },
+  ];
 
   const onSubmitMapel = () => {
-    let temp = { ...formMapel, user: isProfile?.nama_user };
     setLoading(true);
-    ApiRoute.postMapel(temp)
+    if (isNewMapel) {
+      let temp = { ...formMapel, kelas_id: formMapel?.kelas_id?.value };
+      ApiRoute.postMapel(temp)
+        .then((res) => {
+          toast.success("Mata pelajaran berhasil ditambahkan");
+          setShowModalMapel(false);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    } else {
+      let temp = {
+        kelas_id: formMapel?.kelas_id?.value,
+        mapel_id: formMapel?.mapel_id?.value,
+      };
+      ApiRoute.postMapelLama(temp)
+        .then((res) => {
+          toast.success("Mata pelajaran berhasil ditambahkan");
+          setShowModalMapel(false);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    }
+  };
+
+  const onSubmitUser = () => {
+    setLoading(true);
+    let temp = { ...formUser };
+
+    if (selectedRole?.value === 1) {
+      temp = { ...temp, mapel_id: formUser?.mapel_id?.value };
+    } else {
+      temp = { ...temp, kelas_id: formUser?.kelas_id?.value };
+    }
+
+    ApiRoute.postUser(selectedRole?.value === 1 ? "guru" : "siswa", temp)
       .then((res) => {
-        toast.success("Mata pelajaran berhasil ditambahkan");
-        setShowModalMapel(false);
+        toast.success("User berhasil ditambahkan");
+        setShowModalUser(false);
         setLoading(false);
       })
       .catch((err) => {
@@ -35,12 +87,33 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    setFormUser({});
+  }, [selectedRole, showModalUser]);
+
+  useEffect(() => {
+    setFormMapel({});
+  }, [showModalMapel]);
+
+  useEffect(() => {
     if (isProfile?.role) {
       setLoading(true);
       ApiRoute.getDashboard(isProfile?.role == "siswa" ? `/siswa?kelas=${isProfile?.kelas_id}` : `/guru?mapel=${isProfile?.mapel_id}`)
         .then((res: any) => {
+          if (isProfile?.role === "guru") {
+            Promise.all([ApiRoute.getKelas(), ApiRoute.getMapel()])
+              .then((res) => {
+                setOptionKelas(Formatting.formatRC(res[0], "kelas_id", "nama_kelas"));
+                setOptionMapel(Formatting.formatRC(res[1], "mapel_id", "nama_mapel"));
+                setLoading(false);
+              })
+              .catch((err) => {
+                toast.error(err);
+                setLoading(false);
+              });
+          } else {
+            setLoading(false);
+          }
           setData(res);
-          setLoading(false);
         })
         .catch((err) => {
           toast.error(err);
@@ -51,33 +124,124 @@ export default function Dashboard() {
 
   return (
     <>
+      <ModalCustom isOpen={showModalUser} onClose={() => setShowModalUser(false)}>
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center">
+              <div className="w-[120px] flex-shrink-0">Role</div>
+              <div className="flex-1">
+                <Dropdown options={optionRole} placeholder="Role" value={selectedRole} handleOnChange={(evt) => setSelectedRole(evt)} width="100%" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="w-[120px] flex-shrink-0">{selectedRole?.value === 1 ? "NIP" : "NIS"}</div>
+            <InputCustom
+              value={formUser?.user_id}
+              onChange={(evt) => setFormUser({ ...formUser, user_id: evt })}
+              placeholder={selectedRole?.value === 1 ? "NIP" : "NIS"}
+              className="w-full"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <div className="w-[120px] flex-shrink-0">Nama</div>
+            <InputCustom value={formUser?.nama_user} onChange={(evt) => setFormUser({ ...formUser, nama_user: evt })} placeholder="Nama" className="w-full" />
+          </div>
+
+          <div className="flex items-center">
+            <div className="w-[120px] flex-shrink-0">{selectedRole?.value === 1 ? "Mata Pelajaran" : "Kelas"}</div>
+            {selectedRole?.value === 1 ? (
+              <div className="flex-1">
+                <Dropdown
+                  options={optionMapel}
+                  placeholder="Mata Pelajatan"
+                  value={formUser?.mapel_id}
+                  handleOnChange={(evt) => setFormUser({ ...formUser, mapel_id: evt })}
+                  width="100%"
+                />
+              </div>
+            ) : (
+              <div className="flex-1">
+                <Dropdown
+                  options={optionKelas}
+                  placeholder="Kelas"
+                  value={formUser?.kelas_id}
+                  handleOnChange={(evt) => setFormUser({ ...formUser, kelas_id: evt })}
+                  width="100%"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center">
+            <div className="w-[120px] flex-shrink-0">Username</div>
+            <InputCustom value={formUser?.username} onChange={(evt) => setFormUser({ ...formUser, username: evt })} placeholder="Username" className="w-full" />
+          </div>
+
+          <div className="flex items-center">
+            <div className="w-[120px] flex-shrink-0">Password</div>
+            <InputCustom value={formUser?.password} onChange={(evt) => setFormUser({ ...formUser, password: evt })} placeholder="Password" className="w-full" />
+          </div>
+
+          <div className="flex flex-row gap-3 w-full mt-4">
+            <button className="button-secondary flex-1" onClick={() => setShowModalUser(false)}>
+              Batal
+            </button>
+            <button className="button-primary flex-1" onClick={onSubmitUser}>
+              Simpan
+            </button>
+          </div>
+        </div>
+      </ModalCustom>
+
       <ModalCustom isOpen={showModalMapel} onClose={() => setShowModalMapel(false)}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center">
-              <div className="w-[120px] flex-shrink-0">Kelas</div>
-              <InputCustom
-                value={formMapel?.kelas_id}
-                onChange={(evt) => setFormMapel({ ...formMapel, kelas_id: evt })}
-                placeholder="Kelas"
-                className="w-full"
-              />
+            <div className="flex items-center gap-2">
+              <input type="checkbox" checked={isNewMapel} onChange={(evt) => setIsNewMapel(evt?.target?.checked)} />
+              <div>Mata Pelajaran Baru</div>
             </div>
             <div className="flex items-center">
               <div className="w-[120px] flex-shrink-0">Mata Pelajaran</div>
-              <InputCustom
-                value={formMapel?.nama_mapel}
-                onChange={(evt) => setFormMapel({ ...formMapel, nama_mapel: evt })}
-                placeholder="Mata Pelajaran"
-                className="w-full"
-              />
+              {isNewMapel ? (
+                <InputCustom
+                  value={formMapel?.nama_mapel}
+                  onChange={(evt) => setFormMapel({ ...formMapel, nama_mapel: evt })}
+                  placeholder="Mata Pelajaran"
+                  className="w-full"
+                />
+              ) : (
+                <div className="flex-1">
+                  <Dropdown
+                    options={optionMapel}
+                    placeholder="Mata Pelajatan"
+                    value={formMapel?.mapel_id}
+                    handleOnChange={(evt) => setFormMapel({ ...formMapel, mapel_id: evt })}
+                    width="100%"
+                  />
+                </div>
+              )}
+            </div>
+            <div className="flex items-center">
+              <div className="w-[120px] flex-shrink-0">Kelas</div>
+              <div className="flex-1">
+                <Dropdown
+                  options={optionKelas}
+                  placeholder="Kelas"
+                  value={formMapel?.kelas_id}
+                  handleOnChange={(evt) => setFormMapel({ ...formMapel, kelas_id: evt })}
+                  width="100%"
+                />
+              </div>
             </div>
           </div>
           <div className="flex flex-row gap-3 w-full">
             <button className="button-secondary flex-1" onClick={() => setShowModalMapel(false)}>
               Batal
             </button>
-            <button className="button-primary flex-1" disabled={!formMapel?.nama_mapel || !formMapel?.kelas_id} onClick={onSubmitMapel}>
+            <button className="button-primary flex-1" onClick={onSubmitMapel}>
               Simpan
             </button>
           </div>
@@ -92,7 +256,7 @@ export default function Dashboard() {
               <div className="text-lg">{item?.nama_materi}</div>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="text-lg font-medium">{item?.nama_user}</div>
+              <div className="font-semibold">{item?.nama_guru || item?.nama_kelas}</div>
               <div className="flex flex-col">
                 <div>
                   {item?.materi_selesai}/{item?.total_materi} modul
@@ -115,7 +279,9 @@ export default function Dashboard() {
             align="end"
             content={
               <div className="flex flex-col gap-2 bg-white rounded-lg p-4 border-gray-300 border font-semibold mb-4">
-                <div className="cursor-pointer hover:bg-gray-300 px-2 rounded-sm">User</div>
+                <div className="cursor-pointer hover:bg-gray-300 px-2 rounded-sm" onClick={() => setShowModalUser(true)}>
+                  User
+                </div>
                 <div className="cursor-pointer hover:bg-gray-300 px-2 rounded-sm" onClick={() => setShowModalMapel(true)}>
                   Mata Pelajaran
                 </div>

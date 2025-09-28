@@ -44,7 +44,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
     setDataProfile([
       { label: "Nama", value: profileNow?.nama_user },
       { label: profileNow?.role === "siswa" ? "Kelas" : "Mata Pelajaran", value: profileNow?.role === "siswa" ? profileNow?.kelas_id : profileNow?.mapel_id },
-      { label: profileNow?.role === "siswa" ? "NIS" : "NIK", value: profileNow?.user_id },
+      { label: profileNow?.role === "siswa" ? "NIS" : "NIP", value: profileNow?.user_id },
     ]);
   }, [profileNow]);
 
