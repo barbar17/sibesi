@@ -54,15 +54,15 @@ export async function POST(req: Request) {
             throw new Error(`Gagal menambahkan mapel, ${err}`)
         }
 
-        conn.commit()
+        await conn.commit()
         return Response.json({success: true, insertMapelRes})
     } catch (err: any) {
-        conn.rollback()
+        await conn.rollback()
         if (err instanceof z.ZodError) {
             return Response.json({ success: false, error: err.issues }, { status: 400 })
         }
         return Response.json({success: false, error: err.message || err}, {status: 500})
     } finally {
-        conn.release()
+        await conn.release()
     }
 }
