@@ -27,7 +27,7 @@ export async function POST(req: Request) {
             )
             userRes = res
         } catch (err) {
-            
+            throw new Error(`Gagal menambah guru, ${err}`)
         }
         
     } catch (err: any) {
