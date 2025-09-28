@@ -30,7 +30,7 @@ export default function DetailMateri({ id, handleChangeTab }: { id: any; handleC
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
+      <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
         <div className="flex flex-row gap-2 justify-center items-center relative">
           <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
           <div className="lg:text-4xl text-xl">{data?.nama}</div>

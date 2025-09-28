@@ -59,7 +59,7 @@ export default function ListPR({ handleChangeTab }: { handleChangeTab: (tab: num
   }, [isProfile]);
 
   return (
-    <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
+    <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
       <CollapseCustom data={data} namaId="id" namaKonten="tugas" namaIdDetail="id" onDetail={(id) => handleChangeTab(2, id)} onAdd={() => handleChangeTab(3)} />
     </div>
   );

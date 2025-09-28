@@ -56,7 +56,7 @@ export default function ListDoneKuis({ handleChangeTab, id }: { handleChangeTab:
 
   return (
     <>
-      <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4">
+      <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
         <div className="flex justify-center items-center relative">
           <ArrowLeftIcon className="w-8 h-8 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
           <div className="text-4xl">{data?.nama}</div>

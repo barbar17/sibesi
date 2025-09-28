@@ -61,7 +61,7 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
   // }, [time]);
 
   return (
-    <div className="bg-white rounded-lg w-full p-6 flex flex-col gap-4 overflow-auto">
+    <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4 overflow-auto">
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2 justify-center items-center relative">
           <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
