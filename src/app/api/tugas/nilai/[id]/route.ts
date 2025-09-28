@@ -1,7 +1,8 @@
 import poolDB from "@/lib/db";
 
 type NilaiReq = {
-    nilai: Number;
+    nilai: number;
+    catatan: string
 }
 
 export async function POST(req: Request, {params}: {params: Promise<{id:string}>}) {
@@ -18,7 +19,7 @@ export async function POST(req: Request, {params}: {params: Promise<{id:string}>
 
         let nilaiRes;
         try {
-            const [res] = await conn.execute("UPDATE tugas_detail SET nilai = ? WHERE tugas_detail_id = ?", [data.nilai, id]);
+            const [res] = await conn.execute("UPDATE tugas_detail SET nilai = ?, catatan = ? WHERE tugas_detail_id = ?", [data.nilai, data.catatan, id]);
             nilaiRes = res;
         } catch (err) {
             throw new Error(`Gagal menambahkan nilai, ${err}`)
