@@ -40,8 +40,6 @@ const Api = () => ({
       timeout: 60000,
     };
 
-    console.log("coba", client);
-
     return client;
   },
 

@@ -75,7 +75,6 @@ export default function RichTextEditor({
 
       ApiRoute.postImage(jenis, file)
         .then((res) => {
-          console.log("coba", res);
           setLoading(false);
         })
         .catch((err) => {

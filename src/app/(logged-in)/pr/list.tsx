@@ -49,7 +49,6 @@ export default function ListPR({ handleChangeTab }: { handleChangeTab: (tab: num
       setLoading(true);
       ApiRoute.getTugas(`?kelas=${isProfile?.kelas_id}`)
         .then((res) => {
-          console.log("coba", res);
           setLoading(false);
         })
         .catch((err) => {
