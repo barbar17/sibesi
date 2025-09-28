@@ -2,16 +2,15 @@ import poolDB from "@/lib/db";
 import { logger } from "@/lib/logger";
 import {z} from "zod"
 
-// GET SEMUA USER
-// export async function GET() {
-//     try {
-//         const [rows] = await poolDB.query("SELECT user_id, mapel_id, kelas_id, nama_user FROM mapel");
+export async function GET() {
+    try {
+        const [rows] = await poolDB.query("SELECT user_id, nama_user FROM user WHERE role = 'guru'");
 
-//         return Response.json({success: true, data: rows})
-//     } catch (err: any) {
-//         return Response.json({success: false, err: err.message || err}, {status: 500})
-//     }
-// }
+        return Response.json({success: true, data: rows})
+    } catch (err: any) {
+        return Response.json({success: false, err: err.message || err}, {status: 500})
+    }
+}
 
 // POST USER
 const PostUserSchema = z.object({

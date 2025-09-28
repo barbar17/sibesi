@@ -5,7 +5,7 @@ import {z} from "zod"
 // GET SEMUA MAPEL
 export async function GET() {
     try {
-        const [rows] = await poolDB.query("SELECT mapel_id, kelas_id, nama_mapel FROM mapel");
+        const [rows] = await poolDB.query("SELECT mapel_id, nama_mapel FROM mapel");
 
         return Response.json({success: true, data: rows})
     } catch (err: any) {
@@ -17,7 +17,6 @@ export async function GET() {
 const PostMapelSchema = z.object({
     kelas_id: z.string().min(1, "ID kelas tidak boleh kosong"),
     nama_mapel: z.string().min(1, "Nama mata pelajaran tidak boleh kosong"),
-    user: z.string().min(1, "User tidak ditemukan"),
 })
 
 type MapelReq = z.infer<typeof PostMapelSchema>
@@ -45,7 +44,6 @@ export async function POST(req: Request) {
             throw new Error(`Gagal menambahkan mapel, ${err.messsage}`)
         }
 
-        logger(conn, dataMapel.user, `Menambahkan mapel ${mapelID}`)
         conn.commit()
         return Response.json({success: true, insertMapelRes})
     } catch (err: any) {
