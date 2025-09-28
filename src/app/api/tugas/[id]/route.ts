@@ -16,6 +16,7 @@ export async function GET(req: Request, {params}: {params: Promise<{id:string}>}
             nama: tugas.nama,
             isi: tugas.isi,
             deadline: tugas.deadline,
+            comments_id: tugas.comment_id,
             comments: comments,
         }})
     } catch (err: any) {
