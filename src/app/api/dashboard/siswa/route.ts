@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     }
 
     const [rows] = await poolDB.query(
-      `SELECT nama_mapel, materi.nama AS nama_materi, nama_user, materi_selesai, total_materi FROM mapel
+      `SELECT nama_mapel, materi.nama AS nama_materi, nama_user AS nama_guru, materi_selesai, total_materi FROM mapel
             JOIN materi ON (materi.mapel_id = mapel.mapel_id)
             JOIN user ON (user.mapel_id = mapel.mapel_id)
             JOIN kelas_mapel ON (kelas_mapel.mapel_id = mapel.mapel_id)

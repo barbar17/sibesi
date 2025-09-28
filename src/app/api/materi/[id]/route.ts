@@ -10,7 +10,7 @@ export async function GET(req: Request, {params}: {params: Promise<{id:string}>}
 
         const [comments] = await poolDB.query(`SELECT nama_user, isi, comment_detail.updated_at FROM comment_detail
             JOIN user ON (user.user_id = comment_detail.user_id)
-            WHERE comment_detail.comment_id = ?`, commentID);
+            WHERE comment_detail.comment_id = ? ORDER BY comment_detail.created_at ASC`, commentID);
 
         return Response.json({success: true, data: {
             nama: materi[0].nama,
