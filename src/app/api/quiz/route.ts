@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
         const [rows] = await poolDB.query<RowDataPacket[]>(
             `SELECT mapel.mapel_id, nama_mapel, quiz_id, nama_quiz, deadline_quiz, time_quiz FROM mapel
-            JOIN quiz ON (quiz.mapel_id = mapel.mapel_id)
+            LEFT JOIN quiz ON (quiz.mapel_id = mapel.mapel_id)
             JOIN kelas_mapel ON (kelas_mapel.mapel_id = mapel.mapel_id)
             JOIN kelas ON (kelas.kelas_id = kelas_mapel.kelas_id)
             WHERE kelas.kelas_id = ?`,
@@ -55,12 +55,14 @@ export async function GET(req: NextRequest) {
                 }
 
                 const mapel = map.get(item.mapel_id)!;
-                mapel.quiz.push({
-                    id: item.quiz_id,
-                    nama: item.nama_quiz,
-                    deadline: item.deadline_quiz,
-                    time: item.time_quiz,
-                });
+                if (item.quiz_id !== null) {
+                    mapel.quiz.push({
+                        id: item.quiz_id,
+                        nama: item.nama_quiz,
+                        deadline: item.deadline_quiz,
+                        time: item.time_quiz,
+                    });
+                }
             });
 
             return Array.from(map.values());
@@ -117,10 +119,10 @@ export async function POST(req: Request) {
         }
 
         await conn.commit()
-        return Response.json({success: true, commentRes, quizRes})
+        return Response.json({ success: true, commentRes, quizRes })
     } catch (err) {
         await conn.rollback()
-        return Response.json({success: false, error: err})
+        return Response.json({ success: false, error: err })
     } finally {
         await conn.release()
     }

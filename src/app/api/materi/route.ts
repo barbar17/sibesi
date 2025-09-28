@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
     const [rows] = await poolDB.query<RowDataPacket[]>(
       `SELECT mapel.mapel_id, nama_mapel, materi_id, materi.nama AS nama_materi, status FROM mapel
-            JOIN materi ON (materi.mapel_id = mapel.mapel_id)
+            LEFT JOIN materi ON (materi.mapel_id = mapel.mapel_id)
             JOIN kelas_mapel ON (kelas_mapel.mapel_id = mapel.mapel_id)
             JOIN kelas ON (kelas.kelas_id = kelas_mapel.kelas_id)
             WHERE kelas.kelas_id = ?`,
@@ -53,11 +53,13 @@ export async function GET(req: NextRequest) {
         }
 
         const mapel = map.get(item.mapel_id)!;
-        mapel.modul.push({
-          id: item.materi_id,
-          nama: item.nama_materi,
-          status: item.status,
-        });
+        if (item.materi_id !== null) {
+          mapel.modul.push({
+            id: item.materi_id,
+            nama: item.nama_materi,
+            status: item.status,
+          });
+        }
       });
 
       return Array.from(map.values());
