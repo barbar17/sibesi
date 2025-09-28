@@ -86,40 +86,56 @@ const QuizSchema = z.object({
     time: z.int().min(1, "Waktu quiz tidak boleh kosong"),
 })
 
-type QuizReq = z.infer<typeof QuizSchema>
+const SoalSchema = z.object({
+    soal: z.string().min(1, "Soal tidak boleh kosong"),
+    tipe: z.string().min(1, "Tipe tidak boleh kosong"),
+    kunci_jawaban: z.string().min(1, "Kunci jawaban tidak boleh kosong").max(1, "Kunci jawaban hanya terdiri dari 1 huruf"),
+    pilihan_1: z.string().min(1, "Pilihan tidak boleh kosong"),
+    pilihan_2: z.string().min(1, "Pilihan tidak boleh kosong"),
+    pilihan_3: z.string().min(1, "Pilihan tidak boleh kosong"),
+    pilihan_4: z.string().min(1, "Pilihan tidak boleh kosong"),
+})
+
+type SoalReq = z.infer<typeof SoalSchema>
+
+type InfoQuizReq = z.infer<typeof QuizSchema>
+
+type QuizReq = {
+    info: InfoQuizReq,
+    soal: SoalReq[],
+}
 
 export async function POST(req: Request) {
     const conn = await poolDB.getConnection()
     try {
         const payload = await req.json()
-        const data: QuizReq = QuizSchema.parse(payload);
-
-        const [rows]: any = await conn.query("SELECT comment_id FROM comment ORDER BY comment_id DESC LIMIT 1 FOR UPDATE");
-        const maxID = rows[0].comment_id;
-        const newID = maxID + 1;
-
-        await conn.beginTransaction()
-
-        let commentRes;
-        try {
-            const [res] = await conn.execute("INSERT INTO comment (comment_id, jumlah) VALUES (?, ?)", [newID, 0]);
-            commentRes = res;
-        } catch (err) {
-            throw new Error(`Gagal menambahkan comment field, ${err}`);
-        }
+        const data: QuizReq = payload;
 
         let quizRes;
         try {
-            const [res] = await conn.execute(`INSERT INTO quiz (mapel_id, comment_id, nama_quiz, deadline_quiz, time_quiz) VALUES (?,?,?,?,?)`,
-                [data.mapel_id, newID, data.nama_quiz, data.deadline_quiz, data.time]
+            const [res] = await conn.execute(`INSERT INTO quiz (mapel_id, nama_quiz, deadline_quiz, time_quiz) VALUES (?,?,?,?,?)`,
+                [data.info.mapel_id, data.info.nama_quiz, data.info.deadline_quiz, data.info.time]
             )
             quizRes = res
         } catch (err) {
             throw new Error(`Gagal menambahkan quiz, ${err}`);
         }
 
+        const [rows]: any = await conn.execute("SELECT quiz_id from quiz ORDER BY created_at DESC LIMIT 1")
+        const rowData = rows[0]
+
+        const stmt = await conn.prepare(`INSERT INTO quiz_soal (quiz_id, soal, tipe, kunci_jawaban, pilihan_1, pilihan_2, pilihan_3, pilihan_4) VALUES (?,?,?,?,?,?,?,?)`)
+
+        for (const item of data.soal) {
+            try {
+                const [res] = await stmt.execute([rowData.quiz_id, item.soal, item.tipe, item.kunci_jawaban, item.pilihan_1, item.pilihan_2, item.pilihan_3, item.pilihan_4]);
+            } catch(err) {
+                throw new Error(`Gagal menambahkan soal, ${err}`)
+            }
+        }
+
         await conn.commit()
-        return Response.json({ success: true, commentRes, quizRes })
+        return Response.json({ success: true, quizRes })
     } catch (err) {
         await conn.rollback()
         return Response.json({ success: false, error: err })
