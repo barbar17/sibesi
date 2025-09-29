@@ -9,16 +9,20 @@ import ListDoneKuis from "./listDone";
 export default function Kuis() {
   const [selectedTab, setSelectedTab] = useState<number>(1);
   const [id, setId] = useState<number>(0);
+  const [idSiswa, setIdSiswa] = useState<number>(0);
+  const [idKuisSiswa, setIdKuisSiswa] = useState<number>(0);
 
-  const handleChangeTab = (tab: number, idDetail?: any) => {
+  const handleChangeTab = (tab: number, idDetail?: any, idSiswaParam?: number, idKuisSiswaParam?: number) => {
     idDetail && setId(idDetail);
     setSelectedTab(tab);
+    idSiswaParam ? setIdSiswa(idSiswaParam) : setIdSiswa(0);
+    idKuisSiswaParam ? setIdKuisSiswa(idKuisSiswaParam) : setIdKuisSiswa(0);
   };
 
   if (selectedTab === 1) {
     return <ListKuis handleChangeTab={handleChangeTab} />;
   } else if (selectedTab === 2) {
-    return <DetailKuis id={id} handleChangeTab={handleChangeTab} />;
+    return <DetailKuis id={id} handleChangeTab={handleChangeTab} idSiswa={idSiswa} idKuisSiswa={idKuisSiswa} />;
   } else if (selectedTab === 3) {
     return <AddKuis handleChangeTab={handleChangeTab} id={id} />;
   } else {

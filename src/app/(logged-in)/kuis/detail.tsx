@@ -8,12 +8,23 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (tab: number, id?: number) => void; id: number }) {
+export default function DetailKuis({
+  handleChangeTab,
+  id,
+  idSiswa,
+  idKuisSiswa,
+}: {
+  handleChangeTab: (tab: number, id?: number) => void;
+  id: number;
+  idSiswa: number;
+  idKuisSiswa: number;
+}) {
   const setLoading = LoadingStore((state) => state.setLoading);
   const isProfile = ProfileStore((state) => state.profile);
   const [data, setData] = useState<any>();
   const [time, setTime] = useState<number>(-1);
   const [jawaban, setJawaban] = useState<any[]>([]);
+  const [isDone, setIsDone] = useState<boolean>(false);
   const [nilai, setNilai] = useState<string>("");
 
   const handleJawaban = (value: any, id: number) => {
@@ -30,7 +41,12 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
 
   const onSubmit = () => {
     setLoading(true);
-    ApiRoute.postKuis(jawaban, `/${id}/siswa/${isProfile?.user_id}`)
+    let temp: any[] = [];
+    jawaban?.forEach((item: any) => {
+      temp.push({ jawaban: item?.jawaban, quiz_soal_id: item.quiz_soal_id });
+    });
+
+    ApiRoute.postKuis(temp, `/${id}/siswa/${isProfile?.user_id}`)
       .then((res) => {
         toast.success("Kuis berhasil disimpan");
         handleChangeTab(1);
@@ -41,11 +57,32 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
       });
   };
 
+  const onSubmitNilai = () => {
+    let temp = { nilai: parseInt(nilai) };
+
+    setLoading(true);
+    ApiRoute.postKuis(`/nilai/${idKuisSiswa}`)
+      .then(() => {
+        handleChangeTab(4, id);
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     setLoading(true);
-    ApiRoute.getKuis(`/${id}`)
+    Promise.all([ApiRoute.getKuis(`/${id}`), ApiRoute.getKuis(`/${id}/siswa/${idSiswa ? idSiswa : isProfile?.user_id}/jawaban`)])
       .then((res) => {
-        setData(res);
+        if (res[1]?.length === 0 || !res) {
+          setData(res[0]);
+        } else {
+          setData({ ...res[0], kuis: res[1] });
+          setIsDone(true);
+        }
+
         setLoading(false);
       })
       .catch((err) => {
@@ -62,7 +99,7 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
       let tempJawaban: any[] = [];
 
       temp.forEach((item: any) => {
-        tempJawaban.push({ quiz_soal_id: item?.quiz_soal_id });
+        tempJawaban.push({ ...item });
       });
 
       setJawaban(tempJawaban);
@@ -70,7 +107,7 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
   }, [data]);
 
   useEffect(() => {
-    if (isProfile?.role === "siswa") {
+    if (isProfile?.role === "siswa" && !isDone) {
       if (time === 0) {
         onSubmit();
       }
@@ -95,40 +132,87 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        {data?.kuis?.map((item: any, index: number) => (
+        {jawaban?.map((item: any, index: number) => (
           <div key={index} className="flex flex-col lg:flex-row shadow-sm rounded-sm gap-6 border-gray-300 border p-4 justify-between">
             <div dangerouslySetInnerHTML={{ __html: item?.soal }} />
             <div className="w-full lg:w-[300px] flex flex-col gap-2">
               {item?.tipe === "pg" ? (
                 <div className="flex flex-col gap-1">
                   <div className="flex gap-1">
-                    {isProfile?.role === "siswa" && (
-                      <input type="radio" name={item.quiz_soal_id} onChange={() => handleJawaban(item?.pilihan_1, item.quiz_soal_id)} />
+                    {isProfile?.role === "siswa" || idSiswa ? (
+                      <input
+                        type="radio"
+                        checked={item?.jawaban === item?.pilihan_1}
+                        name={item.quiz_soal_id}
+                        onChange={() => handleJawaban(item?.pilihan_1, item.quiz_soal_id)}
+                        disabled={isDone}
+                      />
+                    ) : (
+                      <></>
                     )}
                     {item?.pilihan_1}
                   </div>
                   <div className="flex gap-1">
-                    {isProfile?.role === "siswa" && (
-                      <input type="radio" name={item.quiz_soal_id} onChange={() => handleJawaban(item?.pilihan_2, item.quiz_soal_id)} />
+                    {isProfile?.role === "siswa" || idSiswa ? (
+                      <input
+                        type="radio"
+                        checked={item?.jawaban === item?.pilihan_2}
+                        name={item.quiz_soal_id}
+                        onChange={() => handleJawaban(item?.pilihan_2, item.quiz_soal_id)}
+                        disabled={isDone}
+                      />
+                    ) : (
+                      <></>
                     )}
 
                     {item?.pilihan_2}
                   </div>
                   <div className="flex gap-1">
-                    {isProfile?.role === "siswa" && (
-                      <input type="radio" name={item.quiz_soal_id} onChange={() => handleJawaban(item?.pilihan_3, item.quiz_soal_id)} />
+                    {isProfile?.role === "siswa" || idSiswa ? (
+                      <input
+                        type="radio"
+                        checked={item?.jawaban === item?.pilihan_3}
+                        name={item.quiz_soal_id}
+                        onChange={() => handleJawaban(item?.pilihan_3, item.quiz_soal_id)}
+                        disabled={isDone}
+                      />
+                    ) : (
+                      <></>
                     )}
                     {item?.pilihan_3}
                   </div>
                   <div className="flex gap-1">
-                    {isProfile?.role === "siswa" && (
-                      <input type="radio" name={item.quiz_soal_id} onChange={() => handleJawaban(item?.pilihan_4, item.quiz_soal_id)} />
+                    {isProfile?.role === "siswa" || idSiswa ? (
+                      <input
+                        type="radio"
+                        checked={item?.jawaban === item?.pilihan_4}
+                        name={item.quiz_soal_id}
+                        onChange={() => handleJawaban(item?.pilihan_4, item.quiz_soal_id)}
+                        disabled={isDone}
+                      />
+                    ) : (
+                      <></>
                     )}
                     {item?.pilihan_4}
                   </div>
+
+                  {isProfile?.role === "guru" && idSiswa ? (
+                    <div>
+                      <span className="font-semibold">Kunci Jawaban:</span>
+                      {item?.kunci_jawaban}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               ) : (
-                <textarea className="input-text" placeholder="Isi jawaban disini" onChange={(evt) => handleJawaban(evt.target.value, item.id)} />
+                <textarea
+                  className="input-text"
+                  value={item?.jawaban}
+                  placeholder="Isi jawaban disini"
+                  onChange={(evt) => handleJawaban(evt.target.value, item.id)}
+                  disabled={isDone}
+                />
               )}
             </div>
           </div>
@@ -136,22 +220,27 @@ export default function DetailKuis({ handleChangeTab, id }: { handleChangeTab: (
       </div>
 
       {isProfile?.role === "siswa" ? (
-        <button className="button-primary" onClick={onSubmit}>
-          Simpan
-        </button>
-      ) : (
-        <>
-          <button className="button-primary" onClick={() => handleChangeTab(4, id)}>
-            Lihat Kuis Siswa
+        isDone ? (
+          <div>
+            <span className="font-semibold">Nilai: </span>
+          </div>
+        ) : (
+          <button className={`button-primary`} onClick={onSubmit}>
+            Simpan
           </button>
-
-          {/* <div className="flex gap-2">
-            <InputCustom onChange={(value) => setNilai(value)} placeholder="Nilai" value={nilai} />
-            <button className="button-primary" onClick={() => handleChangeTab(4)}>
-              Simpan
-            </button>
-          </div> */}
-        </>
+        )
+      ) : idSiswa ? (
+        <div className="flex gap-2 items-center">
+          <div className="font-semibold">Nilai</div>
+          <InputCustom type="number" onChange={(value) => setNilai(value)} placeholder="Nilai" value={nilai} />
+          <button className="button-primary" onClick={onSubmitNilai}>
+            Simpan
+          </button>
+        </div>
+      ) : (
+        <button className="button-primary" onClick={() => handleChangeTab(4, id)}>
+          Lihat Kuis Siswa
+        </button>
       )}
     </div>
   );

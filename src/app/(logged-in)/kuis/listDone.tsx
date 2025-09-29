@@ -9,14 +9,20 @@ import { ArrowDownTrayIcon, ArrowLeftIcon, PencilIcon } from "@heroicons/react/2
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function ListDoneKuis({ handleChangeTab, id }: { handleChangeTab: (tab: number) => void; id: number }) {
+export default function ListDoneKuis({
+  handleChangeTab,
+  id,
+}: {
+  handleChangeTab: (tab: number, id?: number, idSiswa?: number, idKuisSiswa?: number) => void;
+  id: number;
+}) {
   const setLoading = LoadingStore((state) => state.setLoading);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [form, setForm] = useState<any>({});
   const [data, setData] = useState<any>();
 
   const column = [
-    { title: "Nama", cell: "nama" },
+    { title: "Nama", cell: "nama_user" },
     {
       title: "Action",
       cell: (row: any) => (
@@ -24,8 +30,9 @@ export default function ListDoneKuis({ handleChangeTab, id }: { handleChangeTab:
           {row?.nilai ? (
             <div className="text-[16px] font-medium">{row?.nilai}</div>
           ) : (
-            <div className="button-secondary w-8 h-8 !p-0" onClick={() => handleChangeTab(2)}>
+            <div className="button-secondary w-8 h-8 !p-0" onClick={() => handleChangeTab(2, id, 112233, row?.quiz_siswa_id)}>
               <PencilIcon className="w-4 h-4" />
+              {row?.quiz_siswa_id}
             </div>
           )}
         </div>
