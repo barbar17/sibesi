@@ -12,13 +12,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         const { id, user } = await params;
         const data: JawabanSiswaReq[] = await req.json()
 
-        const stmt = await conn.prepare("INSERT INTO quiz_siswa_detail (quiz_siswa_id, quiz_soal_id, jawaban, nilai) VALUES (?,?,?,0) WHERE quiz_siswa_id = ? AND quiz_soal_id = ?")
+        const stmt = await conn.prepare("INSERT INTO quiz_siswa_detail (quiz_siswa_id, quiz_soal_id, jawaban) VALUES (?,?,?)")
 
         await conn.beginTransaction()
 
         let quizRes;
         try {
-            const [res] = await conn.execute("INSERT INTO quiz_siswa (user_id, quiz_id, nilai_quiz) VALUS (?,?,0)", [user, id])
+            const [res] = await conn.execute("INSERT INTO quiz_siswa (user_id, quiz_id, nilai_quiz) VALUES (?,?,0)", [user, id])
 
             quizRes = res
         } catch (err) {
@@ -30,7 +30,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
         for (const item of data) {
             try {
-                const [res] = await stmt.execute([dataQuizSiswa.quiz_siswa_id, item.quiz_soal_id, item.jawaban, user, id])
+                const [res] = await stmt.execute([dataQuizSiswa.quiz_siswa_id, item.quiz_soal_id, item.jawaban])
             } catch (err) {
                 throw new Error(`Gagal upload jawaban, ${err}`)
             }

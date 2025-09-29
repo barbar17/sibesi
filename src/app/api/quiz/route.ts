@@ -113,7 +113,7 @@ export async function POST(req: Request) {
 
         let quizRes;
         try {
-            const [res] = await conn.execute(`INSERT INTO quiz (mapel_id, nama_quiz, deadline_quiz, time_quiz) VALUES (?,?,?,?,?)`,
+            const [res] = await conn.execute(`INSERT INTO quiz (mapel_id, nama_quiz, deadline_quiz, time_quiz) VALUES (?,?,?,?)`,
                 [data.info.mapel_id, data.info.nama_quiz, data.info.deadline_quiz, data.info.time]
             )
             quizRes = res
@@ -136,9 +136,9 @@ export async function POST(req: Request) {
 
         await conn.commit()
         return Response.json({ success: true, quizRes })
-    } catch (err) {
+    } catch (err: any) {
         await conn.rollback()
-        return Response.json({ success: false, error: err })
+        return Response.json({ success: false, error: err.message }, {status: 500})
     } finally {
         await conn.release()
     }

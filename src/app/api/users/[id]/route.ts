@@ -68,13 +68,6 @@ export async function DELETE(req: Request, {params}: {params: Promise<{id:string
     try {
         const {id} = await params;
 
-        const url = new URL(req.url);
-        const user = url.searchParams.get("user") || "";
-
-        if(user === "") {
-            return Response.json({success: false, error: "User tidak ditemukan"}, {status: 400})
-        }
-
         await conn.beginTransaction()
 
         let deleteUserRes;
@@ -85,7 +78,6 @@ export async function DELETE(req: Request, {params}: {params: Promise<{id:string
             throw new Error(`Gagal hapus user, ${err}`)
         }
 
-        logger(conn, user, `Menghapus user ${id}`)
         conn.commit()
         return Response.json({success: true, deleteUserRes})
     } catch (err) {

@@ -1,6 +1,23 @@
 import poolDB from "@/lib/db";
 import z from "zod";
 
+export async function GET(req: Request) {
+    try {
+        const url = new URL(req.url)
+        const query = url.searchParams.get("query")
+
+        const likeClause = `%${query}%`
+
+        const [rows] = await poolDB.query(`SELECT user_id, user.kelas_id, nama_kelas, nama_user FROM user 
+            JOIN kelas ON (kelas.kelas_id = user.kelas_id)
+            WHERE role = 'siswa' AND (user_id LIKE ? OR nama_user LIKE ? OR nama_kelas LIKE ?) GROUP BY kelas_id`, [likeClause, likeClause, likeClause])
+        
+        return Response.json({success: true, data: rows})
+    } catch (err) {
+        return Response.json({success: false, error: err})
+    }
+}
+
 const SiswaSchema = z.object({
     user_id: z.string().min(1, "ID user tidak boleh kosong"),
     kelas_id: z.string().min(1, "ID kelas tidak boleh kosong"),

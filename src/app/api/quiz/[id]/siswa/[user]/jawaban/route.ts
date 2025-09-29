@@ -4,7 +4,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     try {
         const { id, user } = await params;
 
-        const [rows] = await poolDB.query(`SELECT soal, tipe, kunci_jawaban, pilihan_1, pilihan_2, pilihan_3, pilihan_4, jawaban, nilai FROM quiz_siswa
+        const [rows] = await poolDB.query(`SELECT soal, tipe, kunci_jawaban, pilihan_1, pilihan_2, pilihan_3, pilihan_4, jawaban FROM quiz_siswa
             JOIN quiz_siswa_detail ON (quiz_siswa_detail.quiz_siswa_id = quiz_siswa.quiz_siswa_id)
             JOIN quiz_soal ON (quiz_soal.quiz_soal_id = quiz_siswa_detail.quiz_soal_id)
             WHERE quiz_siswa.user_id = ? AND quiz_soal.quiz_id = ?`, [user, id])
