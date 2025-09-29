@@ -25,27 +25,22 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     try {        
         const {id} = await params;
 
-        const url = new URL(req.url);
-        const user = url.searchParams.get("user") || "";
-
-        if(user === "") {
-            return Response.json({success: false, error: "user tidak ditemukan"})
-        }
-
         await conn.beginTransaction();
 
-        let deleteKelasRes;
         try {
             const [res] = await conn.execute("DELETE FROM kelas WHERE kelas_id = ?", [id])
-            deleteKelasRes = res;
         } catch (err) {
             throw new Error(`Gagal menghapus kelas, ${err}`)
         }
 
-        await logger(conn, user, `Menghapus kelas ${id}`)
-        conn.commit()
+        try {
+            const [res] = await conn.execute("DELETE FROM kelas_mapel WHERE kelas_id = ?", [id])
+        } catch (err) {
+            throw new Error(`Gagal menghapus kelas, ${err}`)
+        }
 
-        return Response.json({ success: true, deleteKelasRes })
+        conn.commit()
+        return Response.json({ success: true })
     } catch (err: any) {
         conn.rollback()
         return Response.json({ success: false, error: err.message }, { status: 500 })
