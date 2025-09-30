@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
     const [rows] = await poolDB.query<RowDataPacket[]>(
       `SELECT mapel.mapel_id, nama_mapel, tugas_id, tugas.nama AS nama_tugas, deadline FROM mapel
-            JOIN tugas ON (tugas.mapel_id = mapel.mapel_id)
+            LEFT JOIN tugas ON (tugas.mapel_id = mapel.mapel_id)
             WHERE mapel.mapel_id = ?`,
       [mapel]
     );
