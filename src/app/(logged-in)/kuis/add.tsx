@@ -54,14 +54,19 @@ export default function AddKuis({ handleChangeTab, id }: { handleChangeTab: (tab
   const onSubmit = () => {
     let tempSoal = [...soal];
     tempSoal.forEach((item, index) => {
-      (item.tipe = item.tipe.value), (item.kunci_jawaban = item?.kunci_jawaban?.value || "");
+      (item.tipe = item.tipe.value),
+        (item.kunci_jawaban = item?.kunci_jawaban?.value || ""),
+        (item.pilihan_1 = item?.pilihan_1 || ""),
+        (item.pilihan_2 = item?.pilihan_2 || ""),
+        (item.pilihan_3 = item?.pilihan_3 || ""),
+        (item.pilihan_4 = item?.pilihan_4 || "");
     });
 
     let temp = {
       info: {
         mapel_id: id,
         nama_quiz: form?.nama_quiz,
-        time: time?.menit * 60 + time?.detik,
+        time: (time?.menit ? time?.menit : 0) * 60 + (time?.detik ? time?.detik : 0),
         deadline_quiz: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       },
       soal: tempSoal,

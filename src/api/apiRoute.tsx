@@ -45,7 +45,7 @@ const ApiRoute = {
     return Api().post(`/tugas${params}`, data);
   },
   postKuis: (data: any, params: string = "") => {
-    return Api().post(`/quiz${params}`, data);
+    return Api().patch(`/quiz${params}`, data);
   },
   postFileTugas: (data: any) => {
     return Api().post(`/tugas/file`, data, { multipartForm: true });

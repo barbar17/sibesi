@@ -36,6 +36,8 @@
     "react-dom": "19.1.0",
     "react-responsive-modal": "^7.0.0",
     "react-select": "^5.10.2",
+    "react-spinners": "^0.17.0",
+    "react-spinners-kit": "^1.9.1",
     "react-tiny-popover": "^8.1.6",
     "react-toastify": "^11.0.5",
     "zod": "^4.1.11",

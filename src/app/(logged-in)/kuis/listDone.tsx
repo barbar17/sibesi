@@ -17,8 +17,6 @@ export default function ListDoneKuis({
   id: number;
 }) {
   const setLoading = LoadingStore((state) => state.setLoading);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [form, setForm] = useState<any>({});
   const [data, setData] = useState<any>();
 
   const column = [
@@ -27,23 +25,14 @@ export default function ListDoneKuis({
       title: "Action",
       cell: (row: any) => (
         <div className="flex gap-3 items-center justify-center">
-          {row?.nilai ? (
-            <div className="text-[16px] font-medium">{row?.nilai}</div>
-          ) : (
-            <div className="button-secondary w-8 h-8 !p-0" onClick={() => handleChangeTab(2, id, 112233, row?.quiz_siswa_id)}>
-              <PencilIcon className="w-4 h-4" />
-              {row?.quiz_siswa_id}
-            </div>
-          )}
+          {row?.nilai_quiz && <div className="text-[16px] font-medium">{row?.nilai_quiz}</div>}
+          <div className="button-secondary w-8 h-8 !p-0" onClick={() => handleChangeTab(2, id, row?.user_id, row?.quiz_siswa_id)}>
+            <PencilIcon className="w-4 h-4" />
+          </div>
         </div>
       ),
     },
   ];
-
-  const onSubmit = () => {
-    setShowModal(false);
-    toast.success("Nilai berhasil ditambahkan");
-  };
 
   const fetchData = () => {
     setLoading(true);
@@ -57,10 +46,6 @@ export default function ListDoneKuis({
         setLoading(false);
       });
   };
-
-  useEffect(() => {
-    setForm({});
-  }, [showModal]);
 
   useEffect(() => {
     fetchData();

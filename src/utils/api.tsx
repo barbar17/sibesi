@@ -60,6 +60,20 @@ const Api = () => ({
       )
       .then((res) => res?.data?.data || res?.data || res);
   },
+
+  patch: (url: string, body: any, config?: ConfigInterface) => {
+    return axios
+      .patch(
+        url,
+        body,
+        Api().Config({
+          body,
+          url,
+          multipartForm: config?.multipartForm,
+        })
+      )
+      .then((res) => res?.data?.data || res?.data || res);
+  },
 });
 
 export default Api;

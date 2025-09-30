@@ -61,7 +61,7 @@ export default function DetailKuis({
     let temp = { nilai: parseInt(nilai) };
 
     setLoading(true);
-    ApiRoute.postKuis(`/nilai/${idKuisSiswa}`)
+    ApiRoute.postKuis(temp, `/nilai/${idKuisSiswa}`)
       .then(() => {
         handleChangeTab(4, id);
         setLoading(false);
@@ -207,10 +207,10 @@ export default function DetailKuis({
                 </div>
               ) : (
                 <textarea
-                  className="input-text"
+                  className={`input-text h-[100px] ${isProfile?.role === "siswa" || idSiswa ? "flex" : "!hidden"}`}
                   value={item?.jawaban}
                   placeholder="Isi jawaban disini"
-                  onChange={(evt) => handleJawaban(evt.target.value, item.id)}
+                  onChange={(evt) => handleJawaban(evt.target.value, item.quiz_soal_id)}
                   disabled={isDone}
                 />
               )}
@@ -222,7 +222,7 @@ export default function DetailKuis({
       {isProfile?.role === "siswa" ? (
         isDone ? (
           <div>
-            <span className="font-semibold">Nilai: </span>
+            <span className="font-semibold">Nilai: {jawaban[0]?.nilai_quiz}</span>
           </div>
         ) : (
           <button className={`button-primary`} onClick={onSubmit}>
