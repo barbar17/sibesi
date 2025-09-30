@@ -6,7 +6,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         const mapel = url.searchParams.get("mapel") || ""
         const { id } = await params
 
-        const [rows] = await poolDB.query(`SELECT quiz_siswa_id, user_id, nilai_quiz, user.kelas_id, nama_kelas, nama_user FROM user
+        const [rows] = await poolDB.query(`SELECT quiz_siswa_id, user.user_id, nilai_quiz, user.kelas_id, nama_kelas, nama_user FROM user
             JOIN kelas ON (kelas.kelas_id = user.kelas_id)
             LEFT JOIN quiz_siswa ON (quiz_siswa.user_id = user.user_id)
             LEFT JOIN quiz ON (quiz.quiz_id = quiz_siswa.quiz_id)
