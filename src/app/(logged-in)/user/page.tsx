@@ -34,7 +34,7 @@ export default function User() {
       title: "Action",
       cell: (row: any) => (
         <div className="button-secondary !border-red-700 w-8 h-8 !p-0" onClick={() => onDelete(row?.user_id)}>
-          <TrashIcon className="w-4 h-4" />
+          <TrashIcon className="w-4 h-4 text-red-700" />
         </div>
       ),
     },
@@ -44,7 +44,23 @@ export default function User() {
     setLoading(true);
     Promise.all([ApiRoute.getUser("/siswa"), ApiRoute.getUser("/guru")])
       .then((res) => {
-        setData([...res[0], ...res[1]]);
+        // setData([...res[0], ...res[1]]);
+
+        setData([
+          {
+            user_id: "112233",
+            kelas_id: "12MIPA2",
+            nama_kelas: "12 MIPA 2",
+            nama_user: "jhon doe",
+          },
+          {
+            user_id: "1111",
+            mapel_id: "IPA12",
+            nama_mapel: "IPA 12",
+            nama_user: "Jhon Deer",
+          },
+        ]);
+
         setLoading(false);
       })
       .catch((err) => {
