@@ -150,7 +150,7 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
                 }}
               >
                 <div className="flex justify-start items-center gap-2">
-                  <UserIcon className="w-4 h-4 text-gray-800" /> User
+                  <UserIcon className="w-4 h-4 text-gray-800" /> Siswa
                 </div>
               </div>
               <div

@@ -4,13 +4,12 @@ import z from "zod";
 export async function GET(req: Request) {
     try {
         const url = new URL(req.url)
-        const query = url.searchParams.get("query")
+        const mapel = url.searchParams.get("mapel")
 
-        const likeClause = `%${query}%`
-
-        const [rows] = await poolDB.query(`SELECT user_id, user.kelas_id, nama_kelas, nama_user FROM user 
+        const [rows] = await poolDB.query(`SELECT ROW_NUMBER() OVER (ORDER BY user.user_id) AS no, user_id, user.kelas_id, nama_kelas, nama_user FROM user 
             JOIN kelas ON (kelas.kelas_id = user.kelas_id)
-            WHERE role = 'siswa' AND (user_id LIKE ? OR nama_user LIKE ? OR nama_kelas LIKE ?) GROUP BY kelas_id`, [likeClause, likeClause, likeClause])
+            JOIN kelas_mapel ON (kelas_mapel.kelas_id = kelas.kelas_id)
+            WHERE role = 'siswa' AND kelas_mapel.mapel_id = ? ORDER BY user.user_id`, [mapel])
         
         return Response.json({success: true, data: rows})
     } catch (err) {

@@ -142,34 +142,37 @@ export default function Dashboard() {
       </ModalCustom>
 
       <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 grid lg:grid-cols-4 grid-cols-1 gap-6 overflow-auto">
-        {data?.map((item: any, index: number) => (
-          <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6 h-fit relative" key={index}>
-            <div className="flex flex-col gap-1">
-              <div className="text-2xl font-semibold pe-8">{item?.nama_mapel}</div>
-              <div className="text-md">{item?.nama_materi}</div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col">
-                <div className="w-full flex flex-row item-center pb-1 justify-between">
-                  <div className="font-semibold">{item?.nama_guru || item?.nama_kelas}</div>
-                  <div>
-                    Modul {item?.materi_selesai}/{item?.total_materi}
+        <div className="flex flex-col gap-4">
+          <div className="lg:text-4xl text-lg font-bold text-start">Dashboard</div>
+          <div>
+            {data?.map((item: any, index: number) => (
+              <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6 h-fit relative" key={index}>
+                <div className="flex flex-col gap-1">
+                  <div className="text-2xl font-semibold pe-8">{item?.nama_mapel}</div>
+                  <div className="text-md">{item?.nama_materi}</div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex flex-col">
+                    <div className="w-full flex flex-row item-center pb-1 justify-between">
+                      <div className="font-semibold">{item?.nama_guru || item?.nama_kelas}</div>
+                      <div>
+                        Modul {item?.materi_selesai}/{item?.total_materi}
+                      </div>
+                    </div>
+                    <div className="flex relative w-full bg-gray-300 rounded-sm h-4">
+                      <div
+                        className={`h-4 rounded-l-sm bg-green-400 ${item?.materi_selesai === item?.total_materi && "rounded-r-sm"}`}
+                        style={{ width: `${(item?.materi_selesai / item?.total_materi) * 100}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="flex relative w-full bg-gray-300 rounded-sm h-4">
-                  <div
-                    className={`h-4 rounded-l-sm bg-green-400 ${item?.materi_selesai === item?.total_materi && "rounded-r-sm"}`}
-                    style={{ width: `${(item?.materi_selesai / item?.total_materi) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-            {/* <div className="w-8 h-8 right-4 bg-red-700 cursor-pointer rounded-full items-center justify-center flex absolute" onClick={onDelete}>
+                {/* <div className="w-8 h-8 right-4 bg-red-700 cursor-pointer rounded-full items-center justify-center flex absolute" onClick={onDelete}>
               <MinusIcon className="w-4 h-4 text-white" />
             </div> */}
-          </div>
-        ))}
-        {/* {isProfile?.role === "guru" && (
+              </div>
+            ))}
+            {/* {isProfile?.role === "guru" && (
           <Popover
             isOpen={showPopover}
             onClickOutside={() => setShowPopover(false)}
@@ -194,14 +197,16 @@ export default function Dashboard() {
             </div>
           </Popover>
         )} */}
-        {isProfile?.role === "guru" && (
-          <div
-            className="rounded-full w-20 h-20 flex items-center justify-center bg-primary absolute right-10 bottom-10 cursor-pointer"
-            onClick={() => setShowModalMapel(true)}
-          >
-            <PlusIcon className="w-10 h-10 text-white" />
+            {isProfile?.role === "guru" && (
+              <div
+                className="rounded-full w-20 h-20 flex items-center justify-center bg-primary absolute right-10 bottom-10 cursor-pointer"
+                onClick={() => setShowModalMapel(true)}
+              >
+                <PlusIcon className="w-10 h-10 text-white" />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </>
   );

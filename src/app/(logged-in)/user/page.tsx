@@ -7,6 +7,7 @@ import ModalCustom from "@/components/modalCustom";
 import TableCustom from "@/components/tableCustom";
 import LoadingStore from "@/store/loadingStore";
 import { OptionInterface } from "@/types/optionInterface";
+import ProfileStore from "@/store/profileStore";
 import Formatting from "@/utils/formatting";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ export default function User() {
   const [data, setData] = useState<any[]>([]);
   const [selectedRole, setSelectedRole] = useState<OptionInterface | null>({ label: "Guru", value: 1 });
   const [formUser, setFormUser] = useState<any>({});
+  const isProfile = ProfileStore((state) => state.profile);
   const [showModalUser, setShowModalUser] = useState<boolean>(false);
   const [optionKelas, setOptionKelas] = useState<OptionInterface[]>([]);
   const [optionMapel, setOptionMapel] = useState<OptionInterface[]>([]);
@@ -27,9 +29,10 @@ export default function User() {
   ];
 
   const column: any[] = [
-    { title: "NISN/NIP", cell: "user_id" },
+    { title: "No", cell: "no" },
+    { title: "NISN", cell: "user_id" },
     { title: "Nama", cell: "nama_user" },
-    { title: "Kelas/Mata Pelajaran", cell: (row: any) => <div>{row?.nama_kelas || row?.nama_mapel}</div> },
+    { title: "Kelas", cell: (row: any) => <div>{row?.nama_kelas || row?.nama_mapel}</div> },
     {
       title: "Action",
       cell: (row: any) => (
@@ -41,31 +44,18 @@ export default function User() {
   ];
 
   const fetchData = () => {
-    setLoading(true);
-    Promise.all([ApiRoute.getUser("/siswa"), ApiRoute.getUser("/guru")])
-      .then((res) => {
-        // setData([...res[0], ...res[1]]);
-
-        setData([
-          {
-            user_id: "112233",
-            kelas_id: "12MIPA2",
-            nama_kelas: "12 MIPA 2",
-            nama_user: "jhon doe",
-          },
-          {
-            user_id: "1111",
-            mapel_id: "IPA12",
-            nama_mapel: "IPA 12",
-            nama_user: "Jhon Deer",
-          },
-        ]);
-        setLoading(false);
-      })
-      .catch((err) => {
-        toast.error(err);
-        setLoading(false);
-      });
+    if (isProfile?.role) {
+      setLoading(true);
+      Promise.all([ApiRoute.getUser(`/siswa?mapel=${isProfile?.mapel_id}`)])
+        .then((res) => {
+          setData(res[0]);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    }
   };
 
   const onDelete = (id: number) => {
@@ -119,7 +109,11 @@ export default function User() {
         toast.error(err);
         setLoading(false);
       });
-  }, []);
+  }, [isProfile]);
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   return (
     <>
@@ -196,7 +190,7 @@ export default function User() {
       </ModalCustom>
 
       <div className="bg-white flex-col border-t-4 border-primary rounded-lg w-full p-6 flex justify-center gap-6 overflow-auto ">
-        <div className="lg:text-4xl text-lg text-center">Data User</div>
+        <div className="lg:text-4xl text-lg text-start font-bold">Modul Siswa</div>
         <TableCustom columns={column} data={data} />
         <div
           className="rounded-full w-20 h-20 flex items-center justify-center bg-primary absolute right-10 bottom-10 cursor-pointer"
