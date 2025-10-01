@@ -8,7 +8,7 @@ import LoadingStore from "@/store/loadingStore";
 import ProfileStore from "@/store/profileStore";
 import { OptionInterface } from "@/types/optionInterface";
 import Formatting from "@/utils/formatting";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
 import { toast } from "react-toastify";
@@ -16,21 +16,12 @@ import { toast } from "react-toastify";
 export default function Dashboard() {
   const setLoading = LoadingStore((state) => state.setLoading);
   const isProfile = ProfileStore((state) => state.profile);
-  const [showPopover, setShowPopover] = useState<boolean>(false);
   const [showModalMapel, setShowModalMapel] = useState<boolean>(false);
   const [isNewMapel, setIsNewMapel] = useState<boolean>(true);
   const [optionKelas, setOptionKelas] = useState<OptionInterface[]>([]);
   const [optionMapel, setOptionMapel] = useState<OptionInterface[]>([]);
-  const [showModalUser, setShowModalUser] = useState<boolean>(false);
   const [data, setData] = useState<any[]>([]);
   const [formMapel, setFormMapel] = useState<any>({});
-  const [formUser, setFormUser] = useState<any>({});
-  const [selectedRole, setSelectedRole] = useState<OptionInterface | null>({ label: "Guru", value: 1 });
-
-  const optionRole = [
-    { label: "Guru", value: 1 },
-    { label: "Siswa", value: 2 },
-  ];
 
   const onSubmitMapel = () => {
     setLoading(true);
@@ -63,32 +54,6 @@ export default function Dashboard() {
         });
     }
   };
-
-  const onSubmitUser = () => {
-    setLoading(true);
-    let temp = { ...formUser };
-
-    if (selectedRole?.value === 1) {
-      temp = { ...temp, mapel_id: formUser?.mapel_id?.value };
-    } else {
-      temp = { ...temp, kelas_id: formUser?.kelas_id?.value };
-    }
-
-    ApiRoute.postUser(selectedRole?.value === 1 ? "guru" : "siswa", temp)
-      .then((res) => {
-        toast.success("User berhasil ditambahkan");
-        setShowModalUser(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        toast.error(err);
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    setFormUser({});
-  }, [selectedRole, showModalUser]);
 
   useEffect(() => {
     setFormMapel({});
@@ -124,78 +89,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <ModalCustom isOpen={showModalUser} onClose={() => setShowModalUser(false)}>
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center">
-              <div className="w-[120px] flex-shrink-0">Role</div>
-              <div className="flex-1">
-                <Dropdown options={optionRole} placeholder="Role" value={selectedRole} handleOnChange={(evt) => setSelectedRole(evt)} width="100%" />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center">
-            <div className="w-[120px] flex-shrink-0">{selectedRole?.value === 1 ? "NIP" : "NIS"}</div>
-            <InputCustom
-              value={formUser?.user_id}
-              onChange={(evt) => setFormUser({ ...formUser, user_id: evt })}
-              placeholder={selectedRole?.value === 1 ? "NIP" : "NIS"}
-              className="w-full"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <div className="w-[120px] flex-shrink-0">Nama</div>
-            <InputCustom value={formUser?.nama_user} onChange={(evt) => setFormUser({ ...formUser, nama_user: evt })} placeholder="Nama" className="w-full" />
-          </div>
-
-          <div className="flex items-center">
-            <div className="w-[120px] flex-shrink-0">{selectedRole?.value === 1 ? "Mata Pelajaran" : "Kelas"}</div>
-            {selectedRole?.value === 1 ? (
-              <div className="flex-1">
-                <Dropdown
-                  options={optionMapel}
-                  placeholder="Mata Pelajatan"
-                  value={formUser?.mapel_id}
-                  handleOnChange={(evt) => setFormUser({ ...formUser, mapel_id: evt })}
-                  width="100%"
-                />
-              </div>
-            ) : (
-              <div className="flex-1">
-                <Dropdown
-                  options={optionKelas}
-                  placeholder="Kelas"
-                  value={formUser?.kelas_id}
-                  handleOnChange={(evt) => setFormUser({ ...formUser, kelas_id: evt })}
-                  width="100%"
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center">
-            <div className="w-[120px] flex-shrink-0">Username</div>
-            <InputCustom value={formUser?.username} onChange={(evt) => setFormUser({ ...formUser, username: evt })} placeholder="Username" className="w-full" />
-          </div>
-
-          <div className="flex items-center">
-            <div className="w-[120px] flex-shrink-0">Password</div>
-            <InputCustom value={formUser?.password} onChange={(evt) => setFormUser({ ...formUser, password: evt })} placeholder="Password" className="w-full" />
-          </div>
-
-          <div className="flex flex-row gap-3 w-full mt-4">
-            <button className="button-secondary flex-1" onClick={() => setShowModalUser(false)}>
-              Batal
-            </button>
-            <button className="button-primary flex-1" onClick={onSubmitUser}>
-              Simpan
-            </button>
-          </div>
-        </div>
-      </ModalCustom>
-
       <ModalCustom isOpen={showModalMapel} onClose={() => setShowModalMapel(false)}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
@@ -250,17 +143,18 @@ export default function Dashboard() {
 
       <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 grid lg:grid-cols-4 grid-cols-1 gap-6 overflow-auto">
         {data?.map((item: any, index: number) => (
-          <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6 h-fit" key={index}>
+          <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6 h-fit relative" key={index}>
             <div className="flex flex-col gap-1">
-              <div className="text-2xl font-semibold">{item?.nama_mapel}</div>
+              <div className="text-2xl font-semibold pe-8">{item?.nama_mapel}</div>
               <div className="text-md">{item?.nama_materi}</div>
             </div>
             <div className="flex flex-col gap-2">
-              
               <div className="flex flex-col">
                 <div className="w-full flex flex-row item-center pb-1 justify-between">
                   <div className="font-semibold">{item?.nama_guru || item?.nama_kelas}</div>
-                  <div>Modul {item?.materi_selesai}/{item?.total_materi}</div>
+                  <div>
+                    Modul {item?.materi_selesai}/{item?.total_materi}
+                  </div>
                 </div>
                 <div className="flex relative w-full bg-gray-300 rounded-sm h-4">
                   <div
@@ -270,9 +164,12 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            {/* <div className="w-8 h-8 right-4 bg-red-700 cursor-pointer rounded-full items-center justify-center flex absolute" onClick={onDelete}>
+              <MinusIcon className="w-4 h-4 text-white" />
+            </div> */}
           </div>
         ))}
-        {isProfile?.role === "guru" && (
+        {/* {isProfile?.role === "guru" && (
           <Popover
             isOpen={showPopover}
             onClickOutside={() => setShowPopover(false)}
@@ -296,7 +193,13 @@ export default function Dashboard() {
               <PlusIcon className="w-10 h-10 text-white" />
             </div>
           </Popover>
-        )}
+        )} */}
+        <div
+          className="rounded-full w-20 h-20 flex items-center justify-center bg-primary absolute right-10 bottom-10 cursor-pointer"
+          onClick={() => setShowModalMapel(true)}
+        >
+          <PlusIcon className="w-10 h-10 text-white" />
+        </div>
       </div>
     </>
   );

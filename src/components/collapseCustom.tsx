@@ -49,23 +49,27 @@ export default function CollapseCustom({
             <ChevronDownIcon className="w-4 h-4 text-gray-800" />
           </div>
 
-          {showModul === item[namaId] && (
-            <div className="flex flex-col gap-1 text-gray-800 text-lg">
-              <div className="h-[1px] bg-gray-300 w-full mt-2" />
-              {item[namaKonten]?.map((itemModul: any, indexModul: number) => (
-                <div
-                  className="flex cursor-pointer ps-16"
-                  onClick={() => {
-                    setLoading(true);
-                    onDetail(itemModul[namaIdDetail]);
-                  }}
-                  key={indexModul}
-                >
-                  {itemModul?.nama}
-                </div>
-              ))}
-            </div>
-          )}
+          {/* {showModul === item[namaId] && ( */}
+          <div
+            className={`flex flex-col gap-1 text-gray-800 text-lg overflow-hidden transition-all duration-300 ${
+              showModul === item[namaId] ? "max-h-[calc(100dvh-203px)]" : "max-h-0"
+            }`}
+          >
+            <div className="h-[1px] bg-gray-300 w-full mt-2" />
+            {item[namaKonten]?.map((itemModul: any, indexModul: number) => (
+              <div
+                className="flex cursor-pointer ps-16"
+                onClick={() => {
+                  setLoading(true);
+                  onDetail(itemModul[namaIdDetail]);
+                }}
+                key={indexModul}
+              >
+                {itemModul?.nama}
+              </div>
+            ))}
+          </div>
+          {/* )} */}
         </div>
       ))}
     </>

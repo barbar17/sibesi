@@ -9,6 +9,7 @@ import {
   HomeIcon,
   DocumentCheckIcon,
   ComputerDesktopIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -135,6 +136,20 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
             </div>
           </div>
           <div
+            className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/user" && "font-semibold"}`}
+            onClick={() => {
+              if (pathname !== "/user") {
+                setLoading(true);
+                setShowMenu(false);
+                router.push("/user");
+              }
+            }}
+          >
+            <div className="flex justify-start items-center gap-2">
+              <UserIcon className="w-4 h-4 text-gray-800" /> User
+            </div>
+          </div>
+          <div
             className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/materi" && "font-semibold"}`}
             onClick={() => {
               if (pathname !== "/materi") {
@@ -158,38 +173,37 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
               </div>
               <ChevronDownIcon className="w-4 h-4 text-gray-800" />
             </div>
-            {showTugas && (
-              <div className="flex flex-col">
-                <div
-                  className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-8 ${pathname === "/pr" && "font-semibold"}`}
-                  onClick={() => {
-                    if (pathname !== "/pr") {
-                      setLoading(true);
-                      setShowMenu(false);
-                      router.push("/pr");
-                    }
-                  }}
-                >
-                  <div className="flex justify-start items-center gap-2">
-                    <HomeIcon className="w-4 h-4 text-gray-800" /> PR
-                  </div>
-                </div>
-                <div
-                  className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-8 ${pathname === "/kuis" && "font-semibold"}`}
-                  onClick={() => {
-                    if (pathname !== "/kuis") {
-                      setLoading(true);
-                      setShowMenu(false);
-                      router.push("/kuis");
-                    }
-                  }}
-                >
-                  <div className="flex justify-start items-center gap-2">
-                    <DocumentCheckIcon className="w-4 h-4 text-gray-800" /> Kuis
-                  </div>
+
+            <div className={`flex flex-col overflow-hidden transition-all duration-300 bg-slate-200 ${showTugas ? "max-h-[100px]" : "max-h-0"}`}>
+              <div
+                className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-8 ${pathname === "/pr" && "font-semibold"}`}
+                onClick={() => {
+                  if (pathname !== "/pr") {
+                    setLoading(true);
+                    setShowMenu(false);
+                    router.push("/pr");
+                  }
+                }}
+              >
+                <div className="flex justify-start items-center gap-2">
+                  <HomeIcon className="w-4 h-4 text-gray-800" /> PR
                 </div>
               </div>
-            )}
+              <div
+                className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-8 ${pathname === "/kuis" && "font-semibold"}`}
+                onClick={() => {
+                  if (pathname !== "/kuis") {
+                    setLoading(true);
+                    setShowMenu(false);
+                    router.push("/kuis");
+                  }
+                }}
+              >
+                <div className="flex justify-start items-center gap-2">
+                  <DocumentCheckIcon className="w-4 h-4 text-gray-800" /> Kuis
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="py-6 px-4 max-h-[calc(100dvh-45px)] lg:max-h-[calc(100dvh-60px)] flex-1 overflow-auto">{children}</div>

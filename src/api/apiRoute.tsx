@@ -19,6 +19,9 @@ const ApiRoute = {
   getKuis: (params: string = "") => {
     return Api().get(`/quiz${params}`);
   },
+  getUser: (params: string = "") => {
+    return Api().get(`/users${params}`);
+  },
 
   postLogin: (data: any) => {
     return Api().post(`/login`, data);
@@ -49,6 +52,10 @@ const ApiRoute = {
   },
   postFileTugas: (data: any) => {
     return Api().post(`/tugas/file`, data, { multipartForm: true });
+  },
+
+  deleteUser: (params: string = "") => {
+    return Api().delete(`/users${params}`);
   },
 
   getProfile: (data: any) => {

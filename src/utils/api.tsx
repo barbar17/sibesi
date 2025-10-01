@@ -74,6 +74,18 @@ const Api = () => ({
       )
       .then((res) => res?.data?.data || res?.data || res);
   },
+
+  delete: (url: string, config?: ConfigInterface) => {
+    return axios
+      .delete(
+        url,
+        Api().Config({
+          url,
+          multipartForm: config?.multipartForm,
+        })
+      )
+      .then((res) => res?.data?.data || res?.data || res);
+  },
 });
 
 export default Api;
