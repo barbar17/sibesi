@@ -16,6 +16,9 @@ const ApiRoute = {
   getMapel: (params: string = "") => {
     return Api().get(`/mapel${params}`);
   },
+  getKelasMapel: (params: string = "") => {
+    return Api().get(`/kelas/guru${params}`);
+  },
   getKuis: (params: string = "") => {
     return Api().get(`/quiz${params}`);
   },
@@ -59,6 +62,9 @@ const ApiRoute = {
   },
   deleteKelas: (params: string = "") => {
     return Api().delete(`/kelas${params}`);
+  },
+  deleteKelasMapel: (params: string = "") => {
+    return Api().delete(`/kelas/guru${params}`);
   },
 
   getProfile: (data: any) => {
