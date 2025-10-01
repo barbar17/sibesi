@@ -61,7 +61,7 @@ export default function DetailKuis({
     let temp = { nilai: parseInt(nilai) };
 
     setLoading(true);
-    ApiRoute.postKuis(temp, `/nilai/${idKuisSiswa}`)
+    ApiRoute.postKuisNilai(temp, `/nilai/${idKuisSiswa}`)
       .then(() => {
         handleChangeTab(4, id);
         setLoading(false);
@@ -125,7 +125,7 @@ export default function DetailKuis({
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2 justify-center items-center relative">
           <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-          <div className="lg:text-4xl text-xl">{data?.nama}</div>
+          <div className="lg:text-4xl text-xl font-bold">{data?.nama}</div>
         </div>
         <div className="flex w-full justify-end">
           {parseInt((time / 60).toString())}:{time % 60}
@@ -150,7 +150,7 @@ export default function DetailKuis({
                     ) : (
                       <></>
                     )}
-                    {item?.pilihan_1}
+                    A. {item?.pilihan_1}
                   </div>
                   <div className="flex gap-1">
                     {isProfile?.role === "siswa" || idSiswa ? (
@@ -165,7 +165,7 @@ export default function DetailKuis({
                       <></>
                     )}
 
-                    {item?.pilihan_2}
+                    B. {item?.pilihan_2}
                   </div>
                   <div className="flex gap-1">
                     {isProfile?.role === "siswa" || idSiswa ? (
@@ -179,7 +179,7 @@ export default function DetailKuis({
                     ) : (
                       <></>
                     )}
-                    {item?.pilihan_3}
+                    C. {item?.pilihan_3}
                   </div>
                   <div className="flex gap-1">
                     {isProfile?.role === "siswa" || idSiswa ? (
@@ -193,13 +193,13 @@ export default function DetailKuis({
                     ) : (
                       <></>
                     )}
-                    {item?.pilihan_4}
+                    D. {item?.pilihan_4}
                   </div>
 
-                  {isProfile?.role === "guru" && idSiswa ? (
+                  {isProfile?.role === "guru" ? (
                     <div>
-                      <span className="font-semibold">Kunci Jawaban:</span>
-                      {item?.kunci_jawaban}
+                      <span className="font-semibold">Kunci Jawaban: </span>
+                      {item?.kunci_jawaban.toUpperCase()}
                     </div>
                   ) : (
                     <></>

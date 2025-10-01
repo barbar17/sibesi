@@ -110,7 +110,7 @@ export default function DetailPR({ handleChangeTab, id }: { handleChangeTab: (ta
       <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
         <div className="flex flex-row gap-2 justify-center items-center relative">
           <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-          <div className="lg:text-4xl text-xl">{data?.nama}</div>
+          <div className="lg:text-4xl text-xl font-bold">{data?.nama}</div>
         </div>
         <div className="w-full flex gap-3 lg:flex-row flex-col">
           <div className="flex flex-1">

@@ -91,7 +91,8 @@ export async function POST(req: Request) {
     const data: MateriReq = MateriSchema.parse(payload);
 
     const [rows]: any = await conn.query("SELECT comment_id FROM comment ORDER BY comment_id DESC LIMIT 1 FOR UPDATE");
-    const maxID = rows[0].comment_id;
+    let maxID = rows[0]?.comment_id ?? 0;
+    
     const newID = maxID + 1;
 
     await conn.beginTransaction();

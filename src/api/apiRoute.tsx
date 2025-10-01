@@ -51,6 +51,9 @@ const ApiRoute = {
     return Api().post(`/tugas${params}`, data);
   },
   postKuis: (data: any, params: string = "") => {
+    return Api().post(`/quiz${params}`, data);
+  },
+  postKuisNilai: (data: any, params: string = "") => {
     return Api().patch(`/quiz${params}`, data);
   },
   postFileTugas: (data: any) => {

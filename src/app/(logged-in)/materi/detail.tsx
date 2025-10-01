@@ -57,11 +57,12 @@ export default function DetailMateri({ id, handleChangeTab }: { id: any; handleC
       <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
         <div className="flex flex-row gap-2 justify-center items-center relative">
           <ArrowLeftIcon className="lg:w-8 lg:h-8 w-6 h-6 cursor-pointer absolute left-0" onClick={() => handleChangeTab(1)} />
-          <div className="lg:text-4xl text-xl">{data?.nama}</div>
+          <div className="lg:text-4xl text-xl font-bold">{data?.nama}</div>
         </div>
         <div dangerouslySetInnerHTML={{ __html: data?.isi }} className="text-gray-800 " />
       </div>
       <div className="bg-white rounded-lg w-full p-4 flex flex-col gap-2">
+        <div className="lg:text-2xl text-lg font-bold text-start mb-2">Komentar</div>
         {data?.comments?.map((item: any, index: number) => (
           <div className="flex flex-row gap-1 items-center">
             <div className="flex flex-col">
@@ -73,7 +74,7 @@ export default function DetailMateri({ id, handleChangeTab }: { id: any; handleC
         <div className="flex flex-row gap-3">
           <InputCustom value={komen} placeholder="Tulis komentar anda" onChange={(evt) => setKomen(evt)} className="flex-1" />
           <button className="button-primary" disabled={!komen} onClick={onSubmit}>
-            Simpan
+            Submit
           </button>
         </div>
       </div>
