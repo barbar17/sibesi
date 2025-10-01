@@ -30,6 +30,7 @@ export default function ListKuis({ handleChangeTab }: { handleChangeTab: (tab: n
 
   return (
     <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
+      <div className="lg:text-4xl text-lg font-bold text-start">Modul Quiz</div>
       <CollapseCustom
         data={data}
         namaId="id"

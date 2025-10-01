@@ -141,10 +141,10 @@ export default function Dashboard() {
         </div>
       </ModalCustom>
 
-      <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 grid lg:grid-cols-4 grid-cols-1 gap-6 overflow-auto">
+      <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 overflow-auto">
         <div className="flex flex-col gap-4">
           <div className="lg:text-4xl text-lg font-bold text-start">Dashboard</div>
-          <div>
+          <div className="grid lg:grid-cols-4 grid-cols-1 gap-6">
             {data?.map((item: any, index: number) => (
               <div className="rounded-lg border border-gray-300 shadow-lg flex flex-col p-4 w-full gap-6 h-fit relative" key={index}>
                 <div className="flex flex-col gap-1">

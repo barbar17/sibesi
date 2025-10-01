@@ -30,6 +30,7 @@ export default function ListMateri({ handleChangeTab }: { handleChangeTab: (tab:
 
   return (
     <div className="bg-white border-t-4 border-primary rounded-lg w-full p-6 flex flex-col gap-4">
+      <div className="lg:text-4xl text-lg font-bold text-start">Modul Materi</div>
       <CollapseCustom
         data={data}
         namaId="id"

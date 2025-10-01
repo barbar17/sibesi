@@ -2,7 +2,7 @@
 
 import LoadingStore from "@/store/loadingStore";
 import ProfileStore from "@/store/profileStore";
-import { ChevronDownIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, PlusIcon, ChevronRightIcon, BookOpenIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 export default function CollapseCustom({
@@ -44,16 +44,19 @@ export default function CollapseCustom({
                   <PlusIcon className="w-4 h-4 text-white font-bold" />
                 </div>
               )}
-              <div className="text-xl">{item?.nama}</div>
+              <div className="text-xl font-bold">
+                <div className="flex justify-start items-center gap-2">
+                  <BookOpenIcon className="w-4 h-4 text-gray-800" /> {item?.nama}
+                </div>
+              </div>
             </div>
             <ChevronDownIcon className="w-4 h-4 text-gray-800" />
           </div>
 
           {/* {showModul === item[namaId] && ( */}
           <div
-            className={`flex flex-col gap-1 text-gray-800 text-lg overflow-hidden transition-all duration-300 ${
-              showModul === item[namaId] ? "max-h-[calc(100dvh-203px)]" : "max-h-0"
-            }`}
+            className={`flex flex-col gap-1 text-gray-800 text-lg overflow-hidden transition-all duration-300 ${showModul === item[namaId] ? "max-h-[calc(100dvh-203px)]" : "max-h-0"
+              }`}
           >
             <div className="h-[1px] bg-gray-300 w-full mt-2" />
             {item[namaKonten]?.map((itemModul: any, indexModul: number) => (
@@ -65,7 +68,12 @@ export default function CollapseCustom({
                 }}
                 key={indexModul}
               >
-                {itemModul?.nama}
+                <div className="flex flex-row gap-2 item-center justify-center">
+
+                </div>
+                <div className="flex justify-start items-center gap-2">
+                  <ChevronRightIcon className="w-4 h-4 text-gray-800" /> {itemModul?.nama}
+                </div>
               </div>
             ))}
           </div>
