@@ -60,7 +60,6 @@ export default function User() {
             nama_user: "Jhon Deer",
           },
         ]);
-
         setLoading(false);
       })
       .catch((err) => {
@@ -74,7 +73,7 @@ export default function User() {
     ApiRoute.deleteUser(`/${id}`)
       .then(() => {
         toast.success("User berhasil dihapus");
-        setLoading(false);
+        fetchData();
       })
       .catch((err) => {
         toast.error(err);

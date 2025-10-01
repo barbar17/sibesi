@@ -194,12 +194,14 @@ export default function Dashboard() {
             </div>
           </Popover>
         )} */}
-        <div
-          className="rounded-full w-20 h-20 flex items-center justify-center bg-primary absolute right-10 bottom-10 cursor-pointer"
-          onClick={() => setShowModalMapel(true)}
-        >
-          <PlusIcon className="w-10 h-10 text-white" />
-        </div>
+        {isProfile?.role === "guru" && (
+          <div
+            className="rounded-full w-20 h-20 flex items-center justify-center bg-primary absolute right-10 bottom-10 cursor-pointer"
+            onClick={() => setShowModalMapel(true)}
+          >
+            <PlusIcon className="w-10 h-10 text-white" />
+          </div>
+        )}
       </div>
     </>
   );

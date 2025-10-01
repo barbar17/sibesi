@@ -10,6 +10,7 @@ import {
   DocumentCheckIcon,
   ComputerDesktopIcon,
   UserIcon,
+  BuildingLibraryIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -135,20 +136,40 @@ export default function LayoutLoggedIn({ children }: { children: React.ReactNode
               <ComputerDesktopIcon className="w-4 h-4 text-gray-800" /> Dashboard
             </div>
           </div>
-          <div
-            className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/user" && "font-semibold"}`}
-            onClick={() => {
-              if (pathname !== "/user") {
-                setLoading(true);
-                setShowMenu(false);
-                router.push("/user");
-              }
-            }}
-          >
-            <div className="flex justify-start items-center gap-2">
-              <UserIcon className="w-4 h-4 text-gray-800" /> User
-            </div>
-          </div>
+
+          {profileNow?.role === "guru" && (
+            <>
+              <div
+                className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/user" && "font-semibold"}`}
+                onClick={() => {
+                  if (pathname !== "/user") {
+                    setLoading(true);
+                    setShowMenu(false);
+                    router.push("/user");
+                  }
+                }}
+              >
+                <div className="flex justify-start items-center gap-2">
+                  <UserIcon className="w-4 h-4 text-gray-800" /> User
+                </div>
+              </div>
+              <div
+                className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/kelas" && "font-semibold"}`}
+                onClick={() => {
+                  if (pathname !== "/kelas") {
+                    setLoading(true);
+                    setShowMenu(false);
+                    router.push("/kelas");
+                  }
+                }}
+              >
+                <div className="flex justify-start items-center gap-2">
+                  <BuildingLibraryIcon className="w-4 h-4 text-gray-800" /> Kelas
+                </div>
+              </div>
+            </>
+          )}
+
           <div
             className={`w-full cursor-pointer text-md font-bold hover:bg-slate-200 py-2 px-4 ${pathname === "/materi" && "font-semibold"}`}
             onClick={() => {

@@ -57,6 +57,9 @@ const ApiRoute = {
   deleteUser: (params: string = "") => {
     return Api().delete(`/users${params}`);
   },
+  deleteKelas: (params: string = "") => {
+    return Api().delete(`/kelas${params}`);
+  },
 
   getProfile: (data: any) => {
     return Api().post(`/users/profile`, data);
