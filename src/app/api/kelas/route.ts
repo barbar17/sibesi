@@ -1,6 +1,5 @@
 import poolDB from "@/lib/db";
 import { z } from "zod"
-import { logger } from "@/lib/logger";
 
 // AMBIL SEMUA KELAS
 export async function GET() {
@@ -15,7 +14,6 @@ export async function GET() {
 // POST KELAS BARU
 const PostKelasSchema = z.object({
     nama_kelas: z.string().min(1, "Nama kelas tidak boleh kosong"),
-    user: z.string().min(1, "User tidak boleh kosong")
 })
 type KelasReq = z.infer<typeof PostKelasSchema>
 
@@ -43,7 +41,6 @@ export async function POST(req: Request) {
             throw new Error(`Gagal menambahkan kelas, ${err.message}`)
         }
         
-        await logger(conn, kelas.user, `Menambahkan kelas ${kelas.nama_kelas}`);
         await conn.commit();
 
         return Response.json({ success: true, kelas: kelasRes })
