@@ -53,6 +53,9 @@ const ApiRoute = {
   postKuis: (data: any, params: string = "") => {
     return Api().post(`/quiz${params}`, data);
   },
+  postKelas: (data: any) => {
+    return Api().post(`/kelas`, data);
+  },
   postKuisNilai: (data: any, params: string = "") => {
     return Api().patch(`/quiz${params}`, data);
   },
