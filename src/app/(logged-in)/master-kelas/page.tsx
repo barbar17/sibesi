@@ -15,7 +15,6 @@ export default function Kelas() {
 
   const column: any[] = [
     { title: "No", cell: "no" },
-    { title: "Mata Pelajaran", cell: "nama_mapel" },
     { title: "Kelas", cell: "nama_kelas" },
     {
       title: "Action",
@@ -32,7 +31,10 @@ export default function Kelas() {
       setLoading(true);
       ApiRoute.getKelasMapel(`?mapel=${isProfile?.mapel_id}`)
         .then((res) => {
-          setData(res);
+          setData([
+            {no: 1, nama_kelas: "10 MIPA 1"},
+            {no: 2, nama_kelas: "11 MIPA 1"},
+          ]);
           setLoading(false);
         })
         .catch((err) => {
@@ -62,7 +64,7 @@ export default function Kelas() {
   return (
     <>
       <div className="bg-white flex-col border-t-4 border-primary rounded-lg w-full p-6 flex justify-center gap-6 overflow-auto ">
-        <div className="lg:text-4xl text-lg font-bold text-start">Modul Mengajar Kelas</div>
+        <div className="lg:text-4xl text-lg font-bold text-start">Modul Master Kelas</div>
         <TableCustom columns={column} data={data} />
       </div>
     </>
